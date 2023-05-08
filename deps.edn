@@ -1,0 +1,26 @@
+{:paths ["src/clj" "src/cljc" "resources"]
+ :deps
+ {org.clojure/clojure        {:mvn/version "1.11.1"}
+  nsfw/nsfw                  {:mvn/version "0.11.72"
+                              :exclusions  [org.clojure/core.async
+                                            org.clojure/clojurescript]}
+  ring/ring                  {:mvn/version "1.5.1"}
+  compojure/compojure        {:mvn/version "1.1.6"}
+  aleph/aleph                {:mvn/version "0.4.2-alpha12"}
+  clucy/clucy                {:mvn/version "0.4.0"}
+  congomongo/congomongo      {:mvn/version "2.6.0"}
+  watchtower/watchtower      {:mvn/version "0.1.1"}
+  org.clojure/java.jdbc      {:mvn/version "0.3.0-beta2"}
+  mysql/mysql-connector-java {:mvn/version "5.1.25"}
+  unk/unk                    {:mvn/version "0.9.1"}
+  org.clojure/core.async     {:mvn/version "0.4.474"}
+  org.clojure/core.logic     {:mvn/version "0.8.11"}
+  org.pegdown/pegdown        {:mvn/version "1.4.2"}
+  clj-fuzzy/clj-fuzzy        {:mvn/version "0.1.8"}
+  prone/prone                {:mvn/version "0.6.0"}
+  nrepl/nrepl                {:mvn/version "0.6.0"}}
+ :aliases
+ {:dev
+  {:extra-paths ["src/cljs" "dev"]
+   :extra-deps  {thheller/shadow-cljs      {:mvn/version "2.23.3"}
+                 org.clojure/clojurescript {:mvn/version "1.11.60"}}}}}

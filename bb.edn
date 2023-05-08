@@ -1,0 +1,3 @@
+{:tasks {start-mongo (shell "docker compose up -d mongo")
+         start-cljs  (shell "npx shadow-cljs server")
+         dev         {:depends [start-mongo start-cljs]}}}
