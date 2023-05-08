@@ -24,8 +24,10 @@
   org.clojure/core.logic      {:mvn/version "0.8.11"}
   org.clojure/java.jdbc       {:mvn/version "0.3.0-beta2"}
   org.pegdown/pegdown         {:mvn/version "1.4.2"}
+  com.datomic/peer            {:mvn/version "1.0.6726"}
   org.postgresql/postgresql   {:mvn/version "42.2.10"}
   prone/prone                 {:mvn/version "0.6.0"}
+  com.cnuernber/charred       {:mvn/version "1.028"}
   ring/ring                   {:mvn/version "1.5.1"}
   unk/unk                     {:mvn/version "0.9.1"}
   watchtower/watchtower       {:mvn/version "0.1.1"}}

@@ -2,10 +2,6 @@
             :gx/props     {}}
  :server   {:gx/component clojuredocs.system/server
             :gx/props     {:app (gx/ref :app)}}
- :xtdb     {:gx/component clojuredocs.system/xtdb
-            :gx/props     {:host     "localhost"
-                           :user     (:db/username (gx/ref :secrets))
-                           :password (:db/password (gx/ref :secrets))}}
  :mongo    {:gx/component clojuredocs.system/mongo
             :gx/props     {:url      "mongodb://root:example@localhost:27017/clojuredocs"
                            :username "root"
@@ -14,4 +10,8 @@
             :gx/props     {:mongo (gx/ref :mongo)}}
  :css      {:gx/component clojuredocs.system/css
             :gx/props     {}}
- :secrets  {:gx/component clojuredocs.system/secrets}}
+ :secrets  {:gx/component clojuredocs.system/secrets}
+ :datomic  {:gx/component clojuredocs.system/datomic
+            :gx/props     {:uri    (:datomic/uri (gx/ref :secrets))
+                           :schema []}}
+ }

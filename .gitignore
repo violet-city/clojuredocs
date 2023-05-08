@@ -28,3 +28,6 @@ TAGS
 /.shadow-cljs
 
 /data
+
+/.idea
+/clojuredocs.iml

@@ -1,12 +1,13 @@
 (ns clojuredocs.system
-  (:require [garden.core :as garden]
+  (:require [clojuredocs.css :as css]
+            [clojuredocs.datomic :as datomic]
+            [clojuredocs.entry :as entry]
+            [clojuredocs.env :as env]
+            [clojuredocs.xtdb :as xtdb]
+            [garden.core :as garden]
             [ring.adapter.jetty :as jetty]
             [somnium.congomongo :as mon]
-            [taoensso.timbre :as log]
-            [clojuredocs.xtdb :as xtdb]
-            [clojuredocs.env :as env]
-            [clojuredocs.entry :as entry]
-            [clojuredocs.css :as css]))
+            [taoensso.timbre :as log]))
 
 
 (defn component
@@ -18,55 +19,63 @@
              (fn [node]
                (log/info ::starting name)
                (start node))}}
-     stop (assoc-in [:gx/stop :gx/processor]
-                    (fn [node]
-                      (log/info ::stopping name)
-                      (stop node))))))
+           stop (assoc-in [:gx/stop :gx/processor]
+                          (fn [node]
+                            (log/info ::stopping name)
+                            (stop node))))))
 
 (def app
   (component
-   ::app
-   (fn [_]
-     {:port      (env/int :port 8080)
-      :entry     #'entry/routes
-      :mongo-url (env/str :mongo-url)})))
+    ::app
+    (fn [_]
+      {:port      (env/int :port 8080)
+       :entry     #'entry/routes
+       :mongo-url (env/str :mongo-url)})))
 
 (def server
   (component
-   ::server
-   (fn [node]
-     (let [{:keys [props]} node
-           {:keys [port entry]} (:app props)]
-       (jetty/run-jetty
-        (fn [r]
-          (log/info ::awesome r)
-          (let [resp (entry r)]
-            (if (:status resp)
-              resp
-              (assoc resp :status 200))))
-        {:port port :join? false})))
-   (fn [node]
-     (.stop (:value node)))))
+    ::server
+    (fn [node]
+      (let [{:keys [props]} node
+            {:keys [port entry]} (:app props)]
+        (jetty/run-jetty
+          (fn [r]
+            (log/info ::awesome r)
+            (let [resp (entry r)]
+              (if (:status resp)
+                resp
+                (assoc resp :status 200))))
+          {:port port :join? false})))
+    (fn [node]
+      (.stop (:value node)))))
 
 (def xtdb
   (component
-   ::xtdb
-   (fn start-xtdb
-     [{:keys [props]}]
-     (xtdb/start! props))
-   (fn stop-xtdb
-     [{:keys [props]}]
-     (xtdb/stop! props))))
+    ::xtdb
+    (fn start-xtdb
+      [{:keys [props]}]
+      (xtdb/start! props))
+    (fn stop-xtdb
+      [{:keys [props]}]
+      (xtdb/stop! props))))
+
+(def datomic
+  (component
+    ::datomic
+    (fn [{:keys [props]}]
+      (datomic/start! (:uri props) (:schema props)))
+    (fn [{:keys [props]}]
+      (datomic/stop! props))))
 
 (def mongo
   (component
-   ::mongo
-   (fn [{:keys [props]}]
-     (let [{:keys [username password]} props]
-       (doto (mon/make-connection "clojuredocs" :username username :password password)
-         (mon/set-connection!))))
-   (fn [{:keys [value]}]
-     (mon/close-connection value))))
+    ::mongo
+    (fn [{:keys [props]}]
+      (let [{:keys [username password]} props]
+        (doto (mon/make-connection "clojuredocs" :username username :password password)
+          (mon/set-connection!))))
+    (fn [{:keys [value]}]
+      (mon/close-connection value))))
 
 (defn setup-fixtures
   [_]
@@ -102,30 +111,32 @@
 
 (def fixtures
   (component
-   ::fixtures
-   setup-fixtures))
+    ::fixtures
+    setup-fixtures))
 
 (def css
   (component
-   ::css
-   (fn [_]
-     (garden/css
-      {:output-to     "resources/public/css/app.css"
-       :pretty-print? false
-       :vendors       ["webkit" "moz" "ms"]
-       :auto-prefix   #{:justify-content
-                        :align-items
-                        :flex-direction
-                        :flex-wrap
-                        :align-self
-                        :transition
-                        :transform
-                        :box-shadow}}
-      css/app))))
+    ::css
+    (fn [_]
+      (garden/css
+        {:output-to     "resources/public/css/app.css"
+         :pretty-print? false
+         :vendors       ["webkit" "moz" "ms"]
+         :auto-prefix   #{:justify-content
+                          :align-items
+                          :flex-direction
+                          :flex-wrap
+                          :align-self
+                          :transition
+                          :transform
+                          :box-shadow}}
+        css/app))))
 
 (def secrets
   (component
-   ::secrets
-   (fn [{:keys [props]}]
-     {:db/username "postgres"
-      :db/password "example"})))
+    ::secrets
+    (fn [{:keys [props]}]
+      {:db/username      "postgres"
+       :db/password      "example"
+       :github/client-id "424c7563785d9f93270c"
+       :datomic/uri      "datomic:dev://localhost:4334/clojuredocs"})))

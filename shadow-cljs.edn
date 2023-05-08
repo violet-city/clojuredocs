@@ -1,6 +1,6 @@
 {:deps {:aliases [:dev]}
  :builds
- {:clojuredoc {:target     :browser
-               :asset-path "/js"
-               :output-dir "resources/public/cljs"
-               :modules    {:clojuredocs {:entries [clojuredocs.main]}}}}}
+ {:clojuredocs {:target     :browser
+                :asset-path "/js"
+                :output-dir "resources/public/cljs"
+                :modules    {:clojuredocs {:entries [clojuredocs.main]}}}}}

@@ -17,13 +17,15 @@
    more information."
 
   (:require [clj-http.client :as hc]
-            [clojuredocs.util :as u]))
+            [clojuredocs.util :as u]
+            [taoensso.timbre :as log]))
 
 (def login-base-url "https://github.com/login/oauth")
 
 (defn auth-redirect-url
   "Generates a github authorization URL."
   [{:keys [client-id redirect-uri scopes]}]
+  (log/info client-id redirect-uri scopes)
   (str login-base-url
        "/authorize?"
        "client_id=" (u/url-encode client-id) "&"
