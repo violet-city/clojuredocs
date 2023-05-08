@@ -35,12 +35,12 @@
         (cond-update-in [:forms] #(map str %))
         (update-in [:ns] str)
         (update-in [:arglists] #(map
-                                  (fn [arg-list-coll]
-                                    (->> arg-list-coll
-                                         (map str)
-                                         (interpose " ")
-                                         (apply str)))
-                                  %))
+                                 (fn [arg-list-coll]
+                                   (->> arg-list-coll
+                                        (map str)
+                                        (interpose " ")
+                                        (apply str)))
+                                 %))
         (update-in [:name] str)))
 
   (defn gather-var [ns-obj]
@@ -64,15 +64,15 @@
           namespace (find-ns sym)
           meta (meta namespace)]
       (merge
-        (select-keys meta [:doc :no-doc :added])
-        {:name ns-name})))
+       (select-keys meta [:doc :no-doc :added])
+       {:name ns-name})))
 
   (defn gather-namespaces [{:keys [namespaces] :as lib}]
     (assoc lib
-      :namespaces
-      (->> namespaces
-           (map gather-namespace)
-           (remove :no-doc))))
+           :namespaces
+           (->> namespaces
+                (map gather-namespace)
+                (remove :no-doc))))
 
   ["clojure.core"
    "clojure.core.server"
@@ -229,7 +229,6 @@
                                     (:special-form %) "special-form"
                                     :else "var")))))))
 
-
   (def special-forms
     (->> [{:name 'def
            :ns "clojure.core"
@@ -263,6 +262,4 @@ some derivee of Throwable. Please see http://clojure.org/special_forms#throw"}
           {:name 'set!
            :ns "clojure.core"
            :doc "Assignment special form. When the first operand is a field member access form, the assignment is to the corresponding field. If it is an instance field, the instance expr will be evaluated, then the expr. In all cases the value of expr is returned. Note - you cannot assign to function params or local bindings. Only Java fields, Vars, Refs and Agents are mutable in Clojure. See http://clojure.org/special_forms for more information."}]
-         (map #(assoc % :type "special-form"))))
-
-  )
+         (map #(assoc % :type "special-form")))))

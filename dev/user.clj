@@ -2,8 +2,7 @@
   (:require [k16.gx.beta.system :as gx.system]
             [k16.gx.beta.core :as gx]
             [cljfmt.main]
-            [clojure.edn :as edn]
-            [violet.swamp.job-runner :as job-runner]))
+            [clojure.edn :as edn]))
 
 (defn load-system!
   []
@@ -40,10 +39,3 @@
 (def service #(using :service))
 (def router #(using :router))
 (def cron #(using :cron))
-
-(comment
-  (job-runner/run-job :sync-bills)
-  )
-
-#_
-(tap> (cron))

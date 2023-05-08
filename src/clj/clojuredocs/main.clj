@@ -9,27 +9,27 @@
 
 (defn compile-css []
   (garden/css
-    {:output-to "resources/public/css/app.css"
-     :pretty-print? false
-     :vendors ["webkit" "moz" "ms"]
-     :auto-prefix #{:justify-content
-                    :align-items
-                    :flex-direction
-                    :flex-wrap
-                    :align-self
-                    :transition
-                    :transform
-                    :box-shadow}}
-    css/app))
+   {:output-to "resources/public/css/app.css"
+    :pretty-print? false
+    :vendors ["webkit" "moz" "ms"]
+    :auto-prefix #{:justify-content
+                   :align-items
+                   :flex-direction
+                   :flex-wrap
+                   :align-self
+                   :transition
+                   :transform
+                   :box-shadow}}
+   css/app))
 
 (defn start-http-server [entry-point opts]
   (jetty/run-jetty
-    (fn [r]
-      (let [resp (entry-point r)]
-        (if (:status resp)
-          resp
-          (assoc resp :status 200))))
-    opts))
+   (fn [r]
+     (let [resp (entry-point r)]
+       (if (:status resp)
+         resp
+         (assoc resp :status 200))))
+   opts))
 
 (defn create-app []
   {:port (env/int :port 8080)
@@ -52,26 +52,26 @@
 
 (defn add-all-indexes! []
   (add-indexes-to-coll!
-    :examples [:var :deleted-at
-               :author.login :author.account-source
-               :editors.login :editors.account-source])
+   :examples [:var :deleted-at
+              :author.login :author.account-source
+              :editors.login :editors.account-source])
 
   (add-indexes-to-coll! :namespaces [:name])
 
   (add-indexes-to-coll!
-    :see-alsos [:from-var.name :from-var.ns :from-var.library-url
-                :to-var.ns :to-var.name :to-var.library-url
-                :account.login :account.account-source])
+   :see-alsos [:from-var.name :from-var.ns :from-var.library-url
+               :to-var.ns :to-var.name :to-var.library-url
+               :account.login :account.account-source])
 
   (add-indexes-to-coll! :libraries [:namespaces])
 
   (add-indexes-to-coll!
-    :notes [:var.ns :var.name :var.library-url
-            :account.login :account.account-source])
+   :notes [:var.ns :var.name :var.library-url
+           :account.login :account.account-source])
 
   (add-indexes-to-coll!
-    :legacy-var-redirects [:function-id
-                           :editor.login :editor.account-source])
+   :legacy-var-redirects [:function-id
+                          :editor.login :editor.account-source])
 
   (add-indexes-to-coll! :users [:login :account-source])
 

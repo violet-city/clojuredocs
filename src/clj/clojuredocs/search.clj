@@ -9,30 +9,30 @@
 (defn tokenize-name [s]
   (when s
     (str
-      s
-      " "
-      (->> (str/split s #"-")
-           (interpose " ")
-           (apply str)))))
+     s
+     " "
+     (->> (str/split s #"-")
+          (interpose " ")
+          (apply str)))))
 
 (def var-keys
-    [:ns
-     :name
-     :file
-     :column
-     :line
-     :added
-     :arglists
-     :doc
-     :static
-     :tag ; convert to string
-     :macro
-     :dynamic
-     :special-form
-     :forms ; -> list of strings
-     :deprecated
-     :url
-     :no-doc])
+  [:ns
+   :name
+   :file
+   :column
+   :line
+   :added
+   :arglists
+   :doc
+   :static
+   :tag ; convert to string
+   :macro
+   :dynamic
+   :special-form
+   :forms ; -> list of strings
+   :deprecated
+   :url
+   :no-doc])
 
 (defn cond-update-in [m keys & rest]
   (if (get-in m keys)
@@ -56,12 +56,12 @@
       (cond-update-in [:forms] #(map str %))
       (update-in [:ns] str)
       (update-in [:arglists] #(map
-                                (fn [arg-list-coll]
-                                  (->> arg-list-coll
-                                       (map str)
-                                       (interpose " ")
-                                       (apply str)))
-                                %))
+                               (fn [arg-list-coll]
+                                 (->> arg-list-coll
+                                      (map str)
+                                      (interpose " ")
+                                      (apply str)))
+                               %))
       (update-in [:name] str)))
 
 (defn gather-var [ns-obj]
@@ -88,15 +88,15 @@
         namespace (find-ns sym)
         meta (meta namespace)]
     (merge
-      (select-keys meta [:doc :no-doc :added])
-      {:name (str ns-name)})))
+     (select-keys meta [:doc :no-doc :added])
+     {:name (str ns-name)})))
 
 (defn gather-namespaces [{:keys [namespaces] :as lib}]
   (assoc lib
-    :namespaces
-    (->> namespaces
-         (map gather-namespace)
-         (remove :no-doc))))
+         :namespaces
+         (->> namespaces
+              (map gather-namespace)
+              (remove :no-doc))))
 
 (def clojure-lib
   (-> {:library-url "https://github.com/clojure/clojure"
@@ -117,11 +117,11 @@
        (map (fn [sym]
               {:name (str sym)
                :keywords (str
-                           (str sym)
-                           " "
-                           (->> (str/split (str sym) #"\.")
-                                (interpose " ")
-                                (apply str)))
+                          (str sym)
+                          " "
+                          (->> (str/split (str sym) #"\.")
+                               (interpose " ")
+                               (apply str)))
                :type "namespace"}))
        (map (fn [{:keys [name] :as ns}]
               (assoc ns :href (str "/" name))))))
@@ -149,15 +149,14 @@
   "computes the next row using the prev-row current-element and the other seq"
   [prev-row current-element other-seq pred]
   (reduce
-    (fn [row [diagonal above other-element]]
-      (let [update-val
-	     (if (pred other-element current-element)
-	       diagonal
-	       (inc (min diagonal above (peek row)))
-	       )]
-	(conj row update-val)))
-    [(inc (first prev-row))]
-    (map vector prev-row (next prev-row) other-seq)))
+   (fn [row [diagonal above other-element]]
+     (let [update-val
+           (if (pred other-element current-element)
+             diagonal
+             (inc (min diagonal above (peek row))))]
+       (conj row update-val)))
+   [(inc (first prev-row))]
+   (map vector prev-row (next prev-row) other-seq)))
 
 (defn levenshtein-distance
   "Levenshtein Distance - http://en.wikipedia.org/wiki/Levenshtein_distance
@@ -168,11 +167,11 @@ Still maintains the O(n*m) guarantee.
 "
   [a b & {p :predicate  :or {p =}}]
   (peek
-    (reduce
-      (fn [prev-row current-element]
-	(compute-next-row prev-row current-element b p))
-      (map #(identity %2) (cons nil b) (range))
-      a)))
+   (reduce
+    (fn [prev-row current-element]
+      (compute-next-row prev-row current-element b p))
+    (map #(identity %2) (cons nil b) (range))
+    a)))
 
 (defn drop-leading-stars [q]
   (when q
@@ -189,10 +188,10 @@ Still maintains the O(n*m) guarantee.
 
 (defn format-query [q]
   (some-> q
-    str/trim
-    drop-leading-stars
-    lucene-escape
-    (str "*")))
+          str/trim
+          drop-leading-stars
+          lucene-escape
+          (str "*")))
 
 (defn query [q]
   (cond

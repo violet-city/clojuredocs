@@ -18,20 +18,20 @@
   (js/morpheus el (clj->js opts)))
 
 (defn scroll-to
-    [elem & [{:keys [pad]}]]
-    (let [body (sel1 :body)
-          html (sel1 :html)
-          start (max  (.-scrollTop body) (.-scrollTop html))
-          end (- (offset-top elem) pad)]
-      (.tween js/morpheus
-        250
-        (fn [pos]
-          (aset body "scrollTop" pos)
-          (aset html "scrollTop" pos))
-        nil
-        nil
-        start
-        end)))
+  [elem & [{:keys [pad]}]]
+  (let [body (sel1 :body)
+        html (sel1 :html)
+        start (max  (.-scrollTop body) (.-scrollTop html))
+        end (- (offset-top elem) pad)]
+    (.tween js/morpheus
+            250
+            (fn [pos]
+              (aset body "scrollTop" pos)
+              (aset html "scrollTop" pos))
+            nil
+            nil
+            start
+            end)))
 
 (defn scroll-to-top []
   (scroll-to (sel1 :body)))
@@ -53,6 +53,6 @@
   [elem & [opts]]
   (let [{:keys [top bottom] :as res} (bounding-client-rect elem)]
     (when (or (< js/window.innerHeight
-                (+ top (.-offsetHeight elem)))
+                 (+ top (.-offsetHeight elem)))
               (< top 0))
       (scroll-to elem opts))))

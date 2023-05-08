@@ -21,14 +21,14 @@
       (if-not parent
         y
         (recur
-          (+ y (.-offsetTop $el))
-          parent)))))
+         (+ y (.-offsetTop $el))
+         parent)))))
 
 (defn computed-style [$el style-attr]
   (let [attr (name style-attr)
         v (.getPropertyValue
-            (.getComputedStyle js/window $el nil)
-            attr)]
+           (.getComputedStyle js/window $el nil)
+           attr)]
     (when (and v (string? v))
       (js/parseInt (str/replace v #"px" "")))))
 
@@ -55,9 +55,9 @@
                                            (- (offset-top $el) px-offset))))
                 (dom/add-class! $el :sticky)
                 (dom/set-style! $el
-                  :width (str width "px")
-                  :maxHeight (str js/window.innerHeight "px")
-                  :top (str px-offset "px")))
+                                :width (str width "px")
+                                :maxHeight (str js/window.innerHeight "px")
+                                :top (str px-offset "px")))
               (do
                 (reset! starting-offset nil)
                 (dom/remove-class! $el :sticky))))]

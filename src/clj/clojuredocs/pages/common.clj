@@ -9,9 +9,8 @@
 (defn gh-auth-url [& [redirect-to-after-auth-url]]
   (let [redirect-url (str "/gh-callback" redirect-to-after-auth-url)]
     (gh/auth-redirect-url
-      (merge config/gh-creds
-             {:redirect-uri (config/url redirect-url)}))))
-
+     (merge config/gh-creds
+            {:redirect-uri (config/url redirect-url)}))))
 
 (defn $ga-script-tag [ga-tracking-id]
   (when ga-tracking-id
@@ -312,27 +311,27 @@ document.location.href = noddy.href;
 
 (defn four-oh-four [{:keys [user]}]
   ($main
-    {:body-class "error-page"
-     :hide-search true
-     :user user
-     :content
-     [:div.row
-      [:div.col-sm-8.col-sm-offset-2
-       [:h1 "404"]
-       [:a.four-oh-four {:href "http://emareaf.deviantart.com/art/Rich-Hickey-321501046"}
-        [:img.four-oh-four {:src "http://fc04.deviantart.net/fs70/f/2012/229/a/6/rich_hickey_by_emareaf-d5bevsm.png"}]]]]}))
+   {:body-class "error-page"
+    :hide-search true
+    :user user
+    :content
+    [:div.row
+     [:div.col-sm-8.col-sm-offset-2
+      [:h1 "404"]
+      [:a.four-oh-four {:href "http://emareaf.deviantart.com/art/Rich-Hickey-321501046"}
+       [:img.four-oh-four {:src "http://fc04.deviantart.net/fs70/f/2012/229/a/6/rich_hickey_by_emareaf-d5bevsm.png"}]]]]}))
 
 (defn five-hundred [{:keys [user]}]
   ($main
-    {:body-class "error-page"
-     :hide-search true
-     :user user
-     :content
-     [:div.row
-      [:div.col-sm-8.col-sm-offset-2
-       [:h1 "500"]
-       [:a.four-oh-four {:href "http://emareaf.deviantart.com/art/Rich-Hickey-321501046"}
-        [:img.four-oh-four {:src "http://fc04.deviantart.net/fs70/f/2012/229/a/6/rich_hickey_by_emareaf-d5bevsm.png"}]]]]}))
+   {:body-class "error-page"
+    :hide-search true
+    :user user
+    :content
+    [:div.row
+     [:div.col-sm-8.col-sm-offset-2
+      [:h1 "500"]
+      [:a.four-oh-four {:href "http://emareaf.deviantart.com/art/Rich-Hickey-321501046"}
+       [:img.four-oh-four {:src "http://fc04.deviantart.net/fs70/f/2012/229/a/6/rich_hickey_by_emareaf-d5bevsm.png"}]]]]}))
 
 (defn memo-markdown-file [path]
   (try

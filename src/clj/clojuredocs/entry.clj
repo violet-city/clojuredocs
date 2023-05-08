@@ -101,8 +101,8 @@
 
 (def session-store
   (cookie-store
-    {:key config/session-key
-     :domain ".clojuredocs.org"}))
+   {:key config/session-key
+    :domain ".clojuredocs.org"}))
 
 (defn promote-session-user [h]
   (fn [{:keys [session] :as r}]
@@ -145,7 +145,7 @@
    :line-number (.getLineNumber s)
    :method-name (.getMethodName s)})
 
-(defn exception->log-entry [ e]
+(defn exception->log-entry [e]
   {:message (.getMessage e)
    :stacktrace (->> (.getStackTrace e)
                     (map stacktrace-el->clj))})
@@ -173,7 +173,7 @@
         {:status 500
          :headers {"Content-Type" "text/html"}
          :body (hiccup->html-string
-                 (common/five-hundred (:user r)))}))))
+                (common/five-hundred (:user r)))}))))
 
 (def routes
   (-> _routes
@@ -191,7 +191,7 @@
                        "ttf" "application/x-font-ttf"})
       wrap-long-caching
       (enable-mw
-        wrap-exception-logging config/log-exceptions?)
+       wrap-exception-logging config/log-exceptions?)
       (enable-mw
-        prone/wrap-exceptions config/debug-exceptions?)
+       prone/wrap-exceptions config/debug-exceptions?)
       wrap-500-page))

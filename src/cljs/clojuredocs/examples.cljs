@@ -19,19 +19,19 @@
   "A textarea the expands downward with the content (no scroll)"
   [text opts]
   (let [rows (Math/max
-               (+ (->> text
-                       (filter #(= "\n" %))
-                       count)
+              (+ (->> text
+                      (filter #(= "\n" %))
+                      count)
                  3)
-               10)]
+              10)]
     [:textarea
      (merge
-       {:class "form-control"
-        :autoFocus "autofocus"
-        :cols 80
-        :rows rows
-        :value text}
-       opts)]))
+      {:class "form-control"
+       :autoFocus "autofocus"
+       :cols 80
+       :rows rows
+       :value text}
+      opts)]))
 
 (defn eighty-columns []
   (let [text " 80 columns "
@@ -42,17 +42,17 @@
         pre-n (Math/ceil (/ n 2))
         post-n (Math/floor (/ n 2))]
     (str
-      pre-text
-      (apply str (repeat pre-n char))
-      text
-      (apply str (repeat post-n char))
-      post-text)))
+     pre-text
+     (apply str (repeat pre-n char))
+     text
+     (apply str (repeat post-n char))
+     post-text)))
 
 (defn $tabbed-clojure-editor
   [!editor bus]
   (let [{:keys [text body error create-success? loading? active]
          :or {active :editor}} @!editor
-         text (or text body)]
+        text (or text body)]
     [:div.tabbed-editor
      [:ul.nav.nav-tabs
       [:li
@@ -75,15 +75,15 @@
       [:div.example-editor
        {:class (when loading? "disabled")}
        ($expando-ta
-         text
-         {:on-change (fn [e]
-                       (let [v (.. e -target -value)]
-                         (.preventDefault e)
-                         (swap! !editor assoc :text v)
-                         false))
-          :value text
-          :disabled (when loading? "disabled")
-          :placeholder "Code Here"})
+        text
+        {:on-change (fn [e]
+                      (let [v (.. e -target -value)]
+                        (.preventDefault e)
+                        (swap! !editor assoc :text v)
+                        false))
+         :value text
+         :disabled (when loading? "disabled")
+         :placeholder "Code Here"})
        [:pre.columns-guide (eighty-columns)]]]
      [:div.live-preview {:class (when (= :editor active) "hidden")}
       (if-not (empty? text)
@@ -99,9 +99,9 @@
                      bus]
   (let [{:keys [preview-text delete-state editing? _id author editors]} @!state
         authors (distinct
-                  (concat
-                    [author]
-                    editors))
+                 (concat
+                  [author]
+                  editors))
         num-to-show 7]
     [:div.example-meta
      [:div.contributors
@@ -208,7 +208,6 @@
        {:class (when-not loading? " hidden")
         :src "/img/loading.gif"}]]]))
 
-
 ;; Example API
 ;; + [$example opts bus]
 
@@ -264,13 +263,13 @@
         "No examples for " (:ns var) "/" (:name var) "."]
        (->> examples
             (map-indexed
-              (fn [i example]
-                (with-meta
-                  [$example
-                   {:can-delete? (user-can-delete? user example)
-                    :can-edit? (not (nil? user))}
-                   (rea/cursor !state [:examples i]) bus]
-                  {:key (:_id example)})))))
+             (fn [i example]
+               (with-meta
+                 [$example
+                  {:can-delete? (user-can-delete? user example)
+                   :can-edit? (not (nil? user))}
+                  (rea/cursor !state [:examples i]) bus]
+                 {:key (:_id example)})))))
      (if user
        [$create-example
         (rea/cursor !state [:add-example])

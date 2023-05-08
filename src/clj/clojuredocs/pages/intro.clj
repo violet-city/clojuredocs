@@ -19,9 +19,9 @@
     (:login author)
     " authored an example for "
     (util/$var-link (:ns var) (:name var)
-      (-> var :ns util/html-encode)
-      "/"
-      (-> var :name util/html-encode))
+                    (-> var :ns util/html-encode)
+                    "/"
+                    (-> var :name util/html-encode))
     " "
     (util/timeago created-at)
     " ago."
@@ -35,14 +35,14 @@
     (:login author)
     " added a see-also from "
     (util/$var-link (:ns from-var) (:name from-var)
-      (-> from-var :ns util/html-encode)
-      "/"
-      (-> from-var :name util/html-encode))
+                    (-> from-var :ns util/html-encode)
+                    "/"
+                    (-> from-var :name util/html-encode))
     " to "
     (util/$var-link (:ns to-var) (:name to-var)
-      (-> to-var :ns util/html-encode)
-      "/"
-      (-> to-var :name util/html-encode))
+                    (-> to-var :ns util/html-encode)
+                    "/"
+                    (-> to-var :name util/html-encode))
     " "
     (util/timeago created-at)
     " ago."
@@ -56,9 +56,9 @@
     (:login author)
     " authored a note for "
     (util/$var-link (:ns var) (:name var)
-      (-> var :ns util/html-encode)
-      "/"
-      (-> var :name util/html-encode))
+                    (-> var :ns util/html-encode)
+                    "/"
+                    (-> var :name util/html-encode))
     " "
     (util/timeago created-at)
     " ago."]
@@ -256,7 +256,6 @@
          ", and then add an example for your favorite var (or pick one from the list)."]
         [:p "In addition to examples, you also have the ability to add 'see also' references between vars."]]]]]]])
 
-
 (defn top-contribs []
   (let [scores (atom {})]
     (doseq [{:keys [author _id]} (mon/fetch :examples :where {:deleted-at nil})]
@@ -279,26 +278,26 @@
 (defn recently-updated []
   (let [limit 6
         examples (->> (mon/fetch :examples
-                        :where {:deleted-at nil}
-                        :sort {:created-at -1}
-                        :limit limit)
+                                 :where {:deleted-at nil}
+                                 :sort {:created-at -1}
+                                 :limit limit)
                       (map #(assoc % :type :example)))
         see-alsos (->> (mon/fetch :see-alsos :sort {:created-at -1} :limit limit)
                        (map #(assoc % :type :see-also)))
         notes (->> (mon/fetch :notes :sort {:created-at -1} :limit limit)
                    (map #(assoc % :type :note)))]
     (->> (concat
-           examples
-           see-alsos
-           notes)
+          examples
+          see-alsos
+          notes)
          (sort-by :created-at)
          reverse
          (take limit))))
 
 (defn page-handler [{:keys [user]}]
   (-> {:content ($index
-                  (top-contribs)
-                  (recently-updated))
+                 (top-contribs)
+                 (recently-updated))
        :body-class "intro-page"
        :hide-search true
        :user user

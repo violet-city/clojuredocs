@@ -30,59 +30,58 @@
 (defn examples-styleguide-handler
   [{:keys [uri user]}]
   (common/$main
-    {:body-class "examples-styleguide-page"
-     :title "Examples Style Guide | ClojureDocs - Community-Powered Clojure Documentation and Examples"
-     :user user
-     :page-uri uri
-     :content
-     [:div.row
-      [:div.col-md-10.col-md-offset-1.examples-styleguide-content
-       (-> "src/md/examples-styleguide.md"
-           slurp
-           util/markdown)]]}))
+   {:body-class "examples-styleguide-page"
+    :title "Examples Style Guide | ClojureDocs - Community-Powered Clojure Documentation and Examples"
+    :user user
+    :page-uri uri
+    :content
+    [:div.row
+     [:div.col-md-10.col-md-offset-1.examples-styleguide-content
+      (-> "src/md/examples-styleguide.md"
+          slurp
+          util/markdown)]]}))
 
 (defn core-library-handler [{:keys [user uri]}]
   (common/$main
-    {:body-class "core-library-page"
-     :title "Clojure's Core Library | ClojureDocs - Community-Powered Clojure Documentation and Examples"
-     :user user
-     :page-uri uri
-     :mobile-nav [{:title "Core Library"
-                   :links [[:a {:href "/core-library"} "Overview"]
-                           [:a {:href "/core-library/vars"} "All The Vars"]]}
-                  {:title "Namespaces"
-                   :links (->> search/clojure-lib
-                               :namespaces
-                               (map (fn [{:keys [name]}]
-                                      [:a {:href (str "/" name)} name])))}]
-     :content
-     [:div.row
-      [:div.col-sm-2
-       [:div.sidenav
-        {:data-sticky-offset "20"}
-        [:h5 "Core Library"]
-        [:ul
-         [:li [:a {:href "/core-library"} "Overview"]]
-         [:li [:a {:href "/core-library/vars"} "All Vars"]]]
-        (common/$library-nav search/clojure-lib)]]
-      [:div.col-sm-10
-       [:section.markdown
-        (common/memo-markdown-file "src/md/core-library.md")]
-       (for [{:keys [name]} search/searchable-nss]
-         (when-let [content (common/memo-markdown-file (str "src/md/namespaces/" name ".md"))]
-           [:section.markdown
-            [:h2 [:a {:href (str "/" name)} name]]
-            content]))]]}))
-
+   {:body-class "core-library-page"
+    :title "Clojure's Core Library | ClojureDocs - Community-Powered Clojure Documentation and Examples"
+    :user user
+    :page-uri uri
+    :mobile-nav [{:title "Core Library"
+                  :links [[:a {:href "/core-library"} "Overview"]
+                          [:a {:href "/core-library/vars"} "All The Vars"]]}
+                 {:title "Namespaces"
+                  :links (->> search/clojure-lib
+                              :namespaces
+                              (map (fn [{:keys [name]}]
+                                     [:a {:href (str "/" name)} name])))}]
+    :content
+    [:div.row
+     [:div.col-sm-2
+      [:div.sidenav
+       {:data-sticky-offset "20"}
+       [:h5 "Core Library"]
+       [:ul
+        [:li [:a {:href "/core-library"} "Overview"]]
+        [:li [:a {:href "/core-library/vars"} "All Vars"]]]
+       (common/$library-nav search/clojure-lib)]]
+     [:div.col-sm-10
+      [:section.markdown
+       (common/memo-markdown-file "src/md/core-library.md")]
+      (for [{:keys [name]} search/searchable-nss]
+        (when-let [content (common/memo-markdown-file (str "src/md/namespaces/" name ".md"))]
+          [:section.markdown
+           [:h2 [:a {:href (str "/" name)} name]]
+           content]))]]}))
 
 (defn group-vars [vars]
   (->> vars
        (group-by
-         (fn [v]
-           (let [char (-> v :name first str/lower-case)]
-             (if (< (int (first char)) 97)
-               "*^%"
-               char))))
+        (fn [v]
+          (let [char (-> v :name first str/lower-case)]
+            (if (< (int (first char)) 97)
+              "*^%"
+              char))))
        (sort-by #(-> % first))
        (map (fn [[c vs]]
               {:heading c
@@ -90,52 +89,52 @@
 
 (defn core-library-vars-handler [{:keys [user uri]}]
   (common/$main
-    {:body-class "core-library-page"
-     :title "All Functions, Macros, and Vars in Clojure's Core Library | ClojureDocs - Community-Powered Clojure Documentation and Examples"
-     :page-uri uri
-     :user user
-     :mobile-nav
-     [{:title "Core Library"
-       :links [[:a {:href "/core-library"} "Overview"]
-               [:a {:href "/core-library/vars"} "All The Vars"]]}
-      {:title "Namespaces"
-       :links (->> search/clojure-lib
-                   :namespaces
-                   (map (fn [{:keys [name]}]
-                          [:a {:href (str "/" name)} name])))}]
-     :content
-     [:div.row
-      [:div.col-sm-2
-       [:div.sidenav
-        {:data-sticky-offset "20"}
-        [:h5 "Core Library"]
-        [:ul
-         [:li [:a {:href "/core-library"} "Overview"]]
-         [:li [:a {:href "/core-library/vars"} "All Vars"]]]
-        (common/$library-nav search/clojure-lib)]]
-      [:div.col-sm-10
-       [:h1 "All Vars in Clojure's Core Library"]
-       (for [[ns vars] (->> search/clojure-lib
-                            :vars
-                            (group-by :ns)
-                            (sort-by first))]
-         [:div.var-namespace-group
-          [:h2 [:a {:href (str  "/" ns)} ns]]
-          (for [{:keys [heading vars]} (group-vars vars)]
-            [:div.var-group
-             [:h3 heading]
-             [:ul.var-list
-              (for [{:keys [ns name]} vars]
-                [:li (util/$var-link ns name name)])]])])]]}))
+   {:body-class "core-library-page"
+    :title "All Functions, Macros, and Vars in Clojure's Core Library | ClojureDocs - Community-Powered Clojure Documentation and Examples"
+    :page-uri uri
+    :user user
+    :mobile-nav
+    [{:title "Core Library"
+      :links [[:a {:href "/core-library"} "Overview"]
+              [:a {:href "/core-library/vars"} "All The Vars"]]}
+     {:title "Namespaces"
+      :links (->> search/clojure-lib
+                  :namespaces
+                  (map (fn [{:keys [name]}]
+                         [:a {:href (str "/" name)} name])))}]
+    :content
+    [:div.row
+     [:div.col-sm-2
+      [:div.sidenav
+       {:data-sticky-offset "20"}
+       [:h5 "Core Library"]
+       [:ul
+        [:li [:a {:href "/core-library"} "Overview"]]
+        [:li [:a {:href "/core-library/vars"} "All Vars"]]]
+       (common/$library-nav search/clojure-lib)]]
+     [:div.col-sm-10
+      [:h1 "All Vars in Clojure's Core Library"]
+      (for [[ns vars] (->> search/clojure-lib
+                           :vars
+                           (group-by :ns)
+                           (sort-by first))]
+        [:div.var-namespace-group
+         [:h2 [:a {:href (str  "/" ns)} ns]]
+         (for [{:keys [heading vars]} (group-vars vars)]
+           [:div.var-group
+            [:h3 heading]
+            [:ul.var-list
+             (for [{:keys [ns name]} vars]
+               [:li (util/$var-link ns name name)])]])])]]}))
 
 (defn add-see-alsos [results]
   (let [sa-lookup (->> results
                        (map #(select-keys % [:ns :name :library-url]))
                        (map (fn [{:keys [ns name library-url] :as l}]
                               [l (->> (mon/fetch :see-alsos
-                                        :where {:from-var.ns ns
-                                                :from-var.name name
-                                                :from-var.library-url library-url})
+                                                 :where {:from-var.ns ns
+                                                         :from-var.name name
+                                                         :from-var.library-url library-url})
                                       (map (fn [{:keys [to-var]}]
                                              {:ns (:ns to-var)
                                               :name (:name to-var)
@@ -149,10 +148,10 @@
                              (map #(select-keys % [:ns :name :library-url]))
                              (map (fn [{:keys [ns name library-url] :as l}]
                                     [l (mon/fetch-count :examples
-                                         :where {:var.ns ns
-                                                 :var.name name
-                                                 :var.library-url library-url
-                                                 :deleted-at nil})]))
+                                                        :where {:var.ns ns
+                                                                :var.name name
+                                                                :var.library-url library-url
+                                                                :deleted-at nil})]))
                              (into {}))]
     (->> results
          (map #(assoc % :examples-count (get examples-lookup (select-keys % [:ns :name :library-url])))))))
@@ -202,23 +201,23 @@
 (defn concept-page-handler [concept]
   (fn [{:keys [user uri]}]
     (common/$main
-      {:title (str (format-concept-title concept) " | ClojureDocs - Community-Powered Clojure Documentation and Examples")
-       :page-uri uri
-       :user user
-       :content
-       [:div.row
-        [:div.col-sm-2
-         [:div.sidenav
-          {:data-sticky-offset "30"}
-          [:h5 "Concepts"]
-          [:ul
-           (for [{:keys [name href]} search.static/concept-pages]
-             [:li [:a {:href href} name]])]]]
-        [:div.col-sm-10
-         [:div.markdown
-          (-> (str "src/md/concepts/" concept ".md")
-              common/memo-markdown-file
-              common/prep-for-syntaxhighligher)]]]})))
+     {:title (str (format-concept-title concept) " | ClojureDocs - Community-Powered Clojure Documentation and Examples")
+      :page-uri uri
+      :user user
+      :content
+      [:div.row
+       [:div.col-sm-2
+        [:div.sidenav
+         {:data-sticky-offset "30"}
+         [:h5 "Concepts"]
+         [:ul
+          (for [{:keys [name href]} search.static/concept-pages]
+            [:li [:a {:href href} name]])]]]
+       [:div.col-sm-10
+        [:div.markdown
+         (-> (str "src/md/concepts/" concept ".md")
+             common/memo-markdown-file
+             common/prep-for-syntaxhighligher)]]]})))
 
 (defn $arglist [name a]
   [:li.arglist
@@ -249,63 +248,63 @@
                      add-see-alsos
                      add-examples-count)]
     (common/$main
-      {:title (str "Search results for: " query " | ClojureDocs - Community-Powered Clojure Documentation and Examples")
-       :page-uri uri
-       :body-class "search-results-page"
-       :user user
-       :content
-       [:div.row
-        [:div.col-sm-12
-         [:div.search-results-header
-          [:h1 "Search results for query: " [:b html-query]]
-          [:p (if (> (count results) 0)
-                (inc offset)
-                "0")
-           " to "
-           (min (+ offset limit) (count total-results))
-           " of "
-           (count total-results)
-           " results. "
-           [:span.search-controls.pull-right
-            (if (> page 1)
-              [:a {:href (str "/search?q=" query "&page=" (dec page))} "prev page"]
-              "prev page")
-            " | "
-            (if (= limit (count results))
-              [:a {:href (str "/search?q=" query "&page=" (inc page))} "next page"]
-              "next page")]]]
-         [:ul.search-results
-          (for [{:keys [ns name doc see-alsos examples-count arglists forms]} results]
-            (let [html-name (util/html-encode name)]
-              [:li.search-result
-               [:h2 (util/$var-link ns name html-name)]
-               [:h3 ns]
-               [:ul.arglists
-                (if forms
-                  (map #($argform %) forms)
-                  (map #($arglist name %) arglists))]
-               [:p (common/ellipsis doc 300)]
-               [:div.meta-info
-                (util/pluralize examples-count "example" "examples")
-                (when-not (empty? see-alsos)
-                  [:span.see-alsos
-                   " &middot; "
-                   "See also: "
-                   (->> (for [sa see-alsos]
-                          [:span.see-also
-                           (util/$var-link
-                             (:ns sa)
-                             (:name sa)
-                             [:span.ns (:ns sa) "/"] (-> sa :name util/html-encode))])
-                        (interpose ", "))])]]))]
-         [:div.search-controls
-          (if (> page 1)
-            [:a {:href (str "/search?q=" query "&page=" (dec page))} "prev page"]
-            "prev page")
-          " | "
-          (if (= limit (count results))
-            [:a {:href (str "/search?q=" query "&page=" (inc page))} "next page"]
-            "next page")]]]})))
+     {:title (str "Search results for: " query " | ClojureDocs - Community-Powered Clojure Documentation and Examples")
+      :page-uri uri
+      :body-class "search-results-page"
+      :user user
+      :content
+      [:div.row
+       [:div.col-sm-12
+        [:div.search-results-header
+         [:h1 "Search results for query: " [:b html-query]]
+         [:p (if (> (count results) 0)
+               (inc offset)
+               "0")
+          " to "
+          (min (+ offset limit) (count total-results))
+          " of "
+          (count total-results)
+          " results. "
+          [:span.search-controls.pull-right
+           (if (> page 1)
+             [:a {:href (str "/search?q=" query "&page=" (dec page))} "prev page"]
+             "prev page")
+           " | "
+           (if (= limit (count results))
+             [:a {:href (str "/search?q=" query "&page=" (inc page))} "next page"]
+             "next page")]]]
+        [:ul.search-results
+         (for [{:keys [ns name doc see-alsos examples-count arglists forms]} results]
+           (let [html-name (util/html-encode name)]
+             [:li.search-result
+              [:h2 (util/$var-link ns name html-name)]
+              [:h3 ns]
+              [:ul.arglists
+               (if forms
+                 (map #($argform %) forms)
+                 (map #($arglist name %) arglists))]
+              [:p (common/ellipsis doc 300)]
+              [:div.meta-info
+               (util/pluralize examples-count "example" "examples")
+               (when-not (empty? see-alsos)
+                 [:span.see-alsos
+                  " &middot; "
+                  "See also: "
+                  (->> (for [sa see-alsos]
+                         [:span.see-also
+                          (util/$var-link
+                           (:ns sa)
+                           (:name sa)
+                           [:span.ns (:ns sa) "/"] (-> sa :name util/html-encode))])
+                       (interpose ", "))])]]))]
+        [:div.search-controls
+         (if (> page 1)
+           [:a {:href (str "/search?q=" query "&page=" (dec page))} "prev page"]
+           "prev page")
+         " | "
+         (if (= limit (count results))
+           [:a {:href (str "/search?q=" query "&page=" (inc page))} "next page"]
+           "next page")]]]})))
 
 (defroutes routes
   (GET "/robots.txt" [] robots-resp)

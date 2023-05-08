@@ -11,7 +11,7 @@
 
 (defn all-see-alsos-relations-map []
   (->> (mon/fetch
-         :see-alsos)
+        :see-alsos)
        (group-by #(select-keys (:from-var %) [:ns :name]))
        (map (fn [[{:keys [ns name]} to-vars]]
               [(str ns "/" name)
@@ -24,7 +24,7 @@
 
 (def memo-all-see-alsos-relations-map
   (unk/memo-ttl all-see-alsos-relations-map
-    (* 1000 60 60 1)))
+                (* 1000 60 60 1)))
 
 (defn see-alsos-relations-handler [r]
   {:body (memo-all-see-alsos-relations-map)
@@ -42,20 +42,19 @@
   (PATCH "/notes/:id" [id] (notes/patch-note-handler id))
   (DELETE "/notes/:id" [id] (notes/delete-note-handler id))
 
-
   (GET "/exports/see-alsos-relations" [] see-alsos-relations-handler)
 
   (not-found
-    {:status 404
-     :body {:message "Route not found"}}))
+   {:status 404
+    :body {:message "Route not found"}}))
 
 (defn string-body? [r]
   (string? (:body r)))
 
 (defn edn-response? [{:keys [headers]}]
   (re-find #"application/edn"
-    (or (get headers "Content-Type")
-        (get headers "content-type"))))
+           (or (get headers "Content-Type")
+               (get headers "content-type"))))
 
 (defn wrap-format-edn-body [h]
   (fn [r]
@@ -81,19 +80,19 @@
           (assoc res :_id (org.bson.types.ObjectId. _id))
           (catch java.lang.IllegalArgumentException e
             (throw+
-              {:status 400
-               :body {:message (str "Error parsing Mongo ID: " _id)}})))
+             {:status 400
+              :body {:message (str "Error parsing Mongo ID: " _id)}})))
         res))))
 
 (defn wrap-render-errors [h]
   (fn [r]
     (try+
-      (h r)
-      (catch map? m m)
-      (catch Exception e
-        (.printStackTrace e)
-        {:body {:message "Unknown server error"}
-         :status 500}))))
+     (h r)
+     (catch map? m m)
+     (catch Exception e
+       (.printStackTrace e)
+       {:body {:message "Unknown server error"}
+        :status 500}))))
 
 (defn wrap-force-edn [h]
   (fn [r]

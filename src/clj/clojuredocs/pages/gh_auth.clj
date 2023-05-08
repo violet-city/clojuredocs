@@ -16,9 +16,9 @@
             gh-user (gh/user token)
             user (gh-user->user gh-user)]
         (mon/update! :users
-          {:login (:login user)
-           :account-source (:account-source user)}
-          user)
+                     {:login (:login user)
+                      :account-source (:account-source user)}
+                     user)
         (-> (redirect (if (empty? path) "/" path))
             (assoc :session {:user user})))
       (catch Exception e

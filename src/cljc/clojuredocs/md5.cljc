@@ -9,8 +9,6 @@
                [goog.string :as gstring]
                [goog.string.format])))
 
-
-
 #?(:cljs
    (do
      (defn string->bytes [s]
@@ -41,8 +39,6 @@
        [string]
        (when string
          (bytes->hex (md5-bytes string))))))
-
-
 
 #? (:clj
     (defn md5-hex
