@@ -1,5 +1,5 @@
 (ns clojuredocs.search
-  (:require [clucy.core :as clucy]
+  (:require [city.violet.clucy :as clucy]
             [clojure.string :as str]
             [clojuredocs.util :as util]
             [clojuredocs.search.static :as static]))

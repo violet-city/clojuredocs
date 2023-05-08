@@ -1,6 +1,6 @@
 (ns clojuredocs.router
   (:require [muuntaja.core :as m]
-            [reitit.coercion.malli :as malli]
+            [reitit.coercion.malli :as coercion-malli]
             [reitit.http :as http]
             [reitit.http.coercion :as coercion]
             [reitit.http.interceptors.exception :as exception]
@@ -16,7 +16,7 @@
   (http/router
    table
    {:data
-    {:coercion reitit.coercion.malli/coercion
+    {:coercion coercion-malli/coercion
      :muuntaja m/instance
      :interceptors
      [(parameters/parameters-interceptor)

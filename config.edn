@@ -1,22 +1,17 @@
-{:server
- {:gx/component clojuredocs.system/server
-  :gx/props     {:host    "0.0.0.0"
-                 :port    5000
-                 :service (gx/ref :service)}}
-
- :service
- {:gx/component clojuredocs.system/service
-  :gx/props     {:router (gx/ref :router)}}
-
- :router
- {:gx/component clojuredocs.system/router
-  :gx/props     {}}
-
- :xtdb
- {:gx/component clojuredocs.system/xtdb
-  :gx/props     {:host     "10.0.0.2"
-                 :user     (:db/username (gx/ref :secrets))
-                 :password (:db/password (gx/ref :secrets))}}
-
- :secrets
- {:gx/component clojuredocs.system/secrets}}
+{:app      {:gx/component clojuredocs.system/app
+            :gx/props     {}}
+ :server   {:gx/component clojuredocs.system/server
+            :gx/props     {:app (gx/ref :app)}}
+ :xtdb     {:gx/component clojuredocs.system/xtdb
+            :gx/props     {:host     "localhost"
+                           :user     (:db/username (gx/ref :secrets))
+                           :password (:db/password (gx/ref :secrets))}}
+ :mongo    {:gx/component clojuredocs.system/mongo
+            :gx/props     {:url      "mongodb://root:example@localhost:27017/clojuredocs"
+                           :username "root"
+                           :password "example"}}
+ :fixtures {:gx/component clojuredocs.system/fixtures
+            :gx/props     {:mongo (gx/ref :mongo)}}
+ :css      {:gx/component clojuredocs.system/css
+            :gx/props     {}}
+ :secrets  {:gx/component clojuredocs.system/secrets}}
