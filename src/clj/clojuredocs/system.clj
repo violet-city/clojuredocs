@@ -3,6 +3,7 @@
             [ring.adapter.jetty :as jetty]
             [somnium.congomongo :as mon]
             [taoensso.timbre :as log]
+            [clojuredocs.xtdb :as xtdb]
             [clojuredocs.env :as env]
             [clojuredocs.entry :as entry]
             [clojuredocs.css :as css]))
@@ -51,7 +52,11 @@
   (component
    ::xtdb
    (fn start-xtdb
-     [{:keys [props]}])))
+     [{:keys [props]}]
+     (xtdb/start! props))
+   (fn stop-xtdb
+     [{:keys [props]}]
+     (xtdb/stop! props))))
 
 (def mongo
   (component

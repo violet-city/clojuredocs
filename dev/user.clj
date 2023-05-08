@@ -33,8 +33,10 @@
   [component]
   `(~component (gx.system/values ::system)))
 
-(def xtdb #(using :xtdb))
+(def app #(using :app))
+(def css #(using :css))
+(def fixtures #(using :fixtures))
+(def mongo #(using :mongo))
+(def secrets #(using :secrets))
 (def server #(using :server))
-(def service #(using :service))
-(def router #(using :router))
-(def cron #(using :cron))
+(def xtdb #(using :xtdb))

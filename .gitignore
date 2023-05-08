@@ -26,3 +26,5 @@ TAGS
 /node_modules
 /.cpcache
 /.shadow-cljs
+
+/data
