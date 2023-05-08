@@ -64,8 +64,8 @@
     ::datomic
     (fn [{:keys [props]}]
       (datomic/start! (:uri props) (:schema props)))
-    (fn [{:keys [props]}]
-      (datomic/stop! props))))
+    (fn [{:keys [value]}]
+      (datomic/stop! value))))
 
 (def mongo
   (component

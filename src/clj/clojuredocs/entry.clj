@@ -20,7 +20,8 @@
             [clojuredocs.api.server :as api.server]
             [somnium.congomongo :as mon]
             [clojure.edn :as edn]
-            [prone.middleware :as prone]))
+            [prone.middleware :as prone]
+            [taoensso.timbre :as log]))
 
 (defn decode-body [content-length body]
   (when (and content-length
@@ -169,6 +170,7 @@
     (try
       (h r)
       (catch Exception e
+        (log/info e)
         (.printStackTrace e)
         {:status 500
          :headers {"Content-Type" "text/html"}
