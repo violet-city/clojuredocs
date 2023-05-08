@@ -55,7 +55,7 @@
         {:status 400
          :body {:message "Couldn't parse mongo id"}}))))
 
-(defn update-timestamps [{:keys [created-at updated-at] :as m}]
+(defn update-timestamps [{:keys [created-at] :as m}]
   (let [now (util/now)
         m (if created-at m (assoc m :created-at now))]
     (assoc m :updated-at now)))

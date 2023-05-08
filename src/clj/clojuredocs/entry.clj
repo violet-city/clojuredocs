@@ -8,23 +8,18 @@
          multipart-params
          keyword-params]
         [ring.middleware.session.cookie :only (cookie-store)]
-        [ring.util.response :only (response content-type)])
+        [ring.util.response :only (response)])
   (:require [clojuredocs.config :as config]
-            [compojure.core :refer (defroutes GET POST PUT DELETE context)]
+            [compojure.core :refer (defroutes GET context)]
             [compojure.response :refer (Renderable render)]
             [compojure.route :refer (not-found)]
-            [ring.util.response :refer (redirect)]
-            [clojure.string :as str]
             [hiccup.page :refer (html5)]
-            [clojuredocs.env :as env]
             [clojuredocs.util :as util]
             [clojuredocs.pages.common :as common]
             [clojuredocs.pages :as pages]
-            [clojure.pprint :refer (pprint)]
             [clojuredocs.api.server :as api.server]
             [somnium.congomongo :as mon]
             [clojure.edn :as edn]
-            [clojuredocs.search :as search]
             [prone.middleware :as prone]))
 
 (defn decode-body [content-length body]

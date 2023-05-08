@@ -168,7 +168,7 @@
       ([]
        (org.bson.types.ObjectId.))
       ([id-or-str]
-       (org.bson.types.ObjectId/massageToObjectId id-or-str))))
+       (org.bson.types.ObjectId. id-or-str))))
 
 #? (:clj
     (defn uuid []

@@ -80,12 +80,12 @@
 (defn start-app []
   (compile-css)
   (let [{:keys [mongo-url port entry] :as app} (create-app)
-        mongo-conn (mon/make-connection mongo-url)]
+        mongo-conn (mon/make-connection mongo-url :username "admin" :password "example")]
     (report-and-exit-on-missing-env-vars!)
     (mon/set-connection! mongo-conn)
     (add-all-indexes!)
     (let [stop-server (start-http-server entry
-                        {:port port :join? false})]
+                                         {:port port :join? false})]
       (println (format "Server running on port %d" port))
       (fn []
         (mon/close-connection mongo-conn)

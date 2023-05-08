@@ -2,7 +2,6 @@
   (:require [clucy.core :as clucy]
             [clojure.string :as str]
             [clojuredocs.util :as util]
-            [clojure.pprint :refer [pprint]]
             [clojuredocs.search.static :as static]))
 
 (def search-index (clucy/memory-index))

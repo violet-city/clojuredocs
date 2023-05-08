@@ -1,10 +1,8 @@
 (ns clojuredocs.api.server
-  (:require [compojure.core :refer (defroutes GET POST PUT DELETE ANY PATCH) :as cc]
+  (:require [compojure.core :refer (defroutes GET POST DELETE PATCH) :as cc]
             [compojure.route :refer (not-found)]
             [somnium.congomongo :as mon]
-            [clout.core :as clout]
             [slingshot.slingshot :refer [try+ throw+]]
-            [clojuredocs.util :as util]
             [clojuredocs.api.examples :as examples]
             [clojuredocs.api.see-alsos :as see-alsos]
             [clojuredocs.api.notes :as notes]

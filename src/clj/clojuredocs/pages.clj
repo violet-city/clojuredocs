@@ -14,8 +14,7 @@
             [clojuredocs.pages.gh-auth :as gh-auth]
             [clojuredocs.pages.quickref :as quickref]
             [clojuredocs.pages.vars :as vars]
-            [clojuredocs.pages.nss :as nss]
-            [clojuredocs.pages.jobs :as jobs]))
+            [clojuredocs.pages.nss :as nss]))
 
 (def robots-resp
   (fn [r]

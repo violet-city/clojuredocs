@@ -5,8 +5,7 @@
             [clojuredocs.search :as search]
             [clojuredocs.pages.common :as common]
             [clojuredocs.data :as data]
-            [ring.util.codec :as codec]
-            [hiccup.core :as hc]))
+            [ring.util.codec :as codec]))
 
 (defn ellipsis [s n]
   (cond

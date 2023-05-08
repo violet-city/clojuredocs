@@ -5,8 +5,7 @@
             [clojuredocs.mail :as mail]
             [somnium.congomongo :as mon]
             [ring.util.codec :as codec]
-            [ring.util.response :refer (redirect)]
-            [compojure.core :refer (defroutes GET)]))
+            [ring.util.response :refer (redirect)]))
 
 (defn page-handler [login account-source]
   (let [{:keys [login account-source] :as user}
