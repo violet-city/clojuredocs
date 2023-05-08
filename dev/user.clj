@@ -1,7 +1,6 @@
 (ns user
   (:require [k16.gx.beta.system :as gx.system]
             [k16.gx.beta.core :as gx]
-            [cljfmt.main]
             [clojure.edn :as edn]))
 
 (defn load-system!
