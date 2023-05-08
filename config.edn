@@ -1,0 +1,22 @@
+{:server
+ {:gx/component clojuredocs.system/server
+  :gx/props     {:host    "0.0.0.0"
+                 :port    5000
+                 :service (gx/ref :service)}}
+
+ :service
+ {:gx/component clojuredocs.system/service
+  :gx/props     {:router (gx/ref :router)}}
+
+ :router
+ {:gx/component clojuredocs.system/router
+  :gx/props     {}}
+
+ :xtdb
+ {:gx/component clojuredocs.system/xtdb
+  :gx/props     {:host     "10.0.0.2"
+                 :user     (:db/username (gx/ref :secrets))
+                 :password (:db/password (gx/ref :secrets))}}
+
+ :secrets
+ {:gx/component clojuredocs.system/secrets}}
