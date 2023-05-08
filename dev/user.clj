@@ -40,4 +40,4 @@
 (def mongo #(using :mongo))
 (def secrets #(using :secrets))
 (def server #(using :server))
-(def xtdb #(using :xtdb))
+(def datomic #(using :datomic))

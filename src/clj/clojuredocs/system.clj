@@ -3,7 +3,6 @@
             [clojuredocs.datomic :as datomic]
             [clojuredocs.entry :as entry]
             [clojuredocs.env :as env]
-            [clojuredocs.xtdb :as xtdb]
             [garden.core :as garden]
             [ring.adapter.jetty :as jetty]
             [somnium.congomongo :as mon]
@@ -48,16 +47,6 @@
           {:port port :join? false})))
     (fn [node]
       (.stop (:value node)))))
-
-(def xtdb
-  (component
-    ::xtdb
-    (fn start-xtdb
-      [{:keys [props]}]
-      (xtdb/start! props))
-    (fn stop-xtdb
-      [{:keys [props]}]
-      (xtdb/stop! props))))
 
 (def datomic
   (component
@@ -135,7 +124,8 @@
 (def secrets
   (component
     ::secrets
-    (fn [{:keys [props]}]
+    (fn [_]
+      ;; TODO: obviously don't store secrets here.
       {:db/username      "postgres"
        :db/password      "example"
        :github/client-id "424c7563785d9f93270c"

@@ -40,5 +40,6 @@
   (when-let [failures (seq (failures))]
     (doseq [failure failures]
       (logger/error failure))
+    (logger/info "shutting down")
     (System/exit 1))
   @(promise))

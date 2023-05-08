@@ -8,9 +8,13 @@
 
 (defn start!
   [uri schema]
-  (d/create-database uri)
-  (doto (d/connect uri)
-    (migrate schema)))
+  (try
+    (d/create-database uri)
+    (doto (d/connect uri)
+      (migrate schema))
+    (catch Throwable t
+      (println t)
+      (throw t))))
 
 (defn stop! [conn]
   (d/release conn))
