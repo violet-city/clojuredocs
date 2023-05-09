@@ -1,5 +1,7 @@
-{:app      {:gx/component clojuredocs.system/app
-            :gx/props     {}}
+{:routes   {:gx/component clojuredocs.system/routes
+            :gx/props     {:datomic (gx/ref :datomic)}}
+ :app      {:gx/component clojuredocs.system/app
+            :gx/props     {:routes (gx/ref :routes)}}
  :server   {:gx/component clojuredocs.system/server
             :gx/props     {:app (gx/ref :app)}}
  :mongo    {:gx/component clojuredocs.system/mongo
@@ -13,5 +15,51 @@
  :secrets  {:gx/component clojuredocs.system/secrets}
  :datomic  {:gx/component clojuredocs.system/datomic
             :gx/props     {:uri    (:datomic/uri (gx/ref :secrets))
-                           :schema []}}
- }
+                           :schema [;; User
+                                    {:db/ident       :user/email
+                                     :db/doc         "User email"
+                                     :db/valueType   :db.type/string
+                                     :db/cardinality :db.cardinality/one
+                                     :db/unique      :db.unique/identity}
+                                    ;; Examples
+                                    {:db/ident       :example/body
+                                     :db/doc         "Content of the example"
+                                     :db/valueType   :db.type/string
+                                     :db/cardinality :db.cardinality/one}
+                                    {:db/ident       :example/author
+                                     :db/doc         "Reference to the author."
+                                     :db/valueType   :db.type/ref
+                                     :db/cardinality :db.cardinality/one}
+                                    {:db/ident       :example/derivative-of
+                                     :db/doc         "Reference to the original example"
+                                     :db/valueType   :db.type/ref
+                                     :db/cardinality :db.cardinality/one}
+                                    ;; Namespaces
+                                    {:db/ident       :namespace/symbol
+                                     :db/doc         "Symbol of the namespace"
+                                     :db/valueType   :db.type/symbol
+                                     :db/cardinality :db.cardinality/one
+                                     :db/unique      :db.unique/identity}
+                                    {:db/ident       :namespace/docstring
+                                     :db/doc         "Docstring of the namespace"
+                                     :db/valueType   :db.type/string
+                                     :db/cardinality :db.cardinality/one}
+                                    ;; Vars
+                                    {:db/ident       :var/docstring
+                                     :db/doc         "Docstring of the var"
+                                     :db/valueType   :db.type/string
+                                     :db/cardinality :db.cardinality/one}
+                                    {:db/ident       :var/ns
+                                     :db/doc         "Namespace of var"
+                                     :db/valueType   :db.type/ref
+                                     :db/cardinality :db.cardinality/one}
+                                    {:db/ident       :var/name
+                                     :db/doc         "Name of var"
+                                     :db/valueType   :db.type/symbol
+                                     :db/cardinality :db.cardinality/one}
+                                    {:db/ident       :var/ns+name
+                                     :db/doc         "Identity of var"
+                                     :db/valueType   :db.type/tuple
+                                     :db/tupleAttrs  [:var/ns :var/name]
+                                     :db/cardinality :db.cardinality/one
+                                     :db/unique      :db.unique/identity}]}}}
