@@ -1,7 +1,19 @@
 (ns user
   (:require [clojure.edn :as edn]
             [k16.gx.beta.core :as gx]
-            [k16.gx.beta.system :as gx.system]))
+            [k16.gx.beta.system :as gx.system]
+            [taoensso.timbre :as log]
+            [taoensso.timbre.appenders.core :as tac]
+            [clojuredocs.query :as query]
+            [datomic.api :as d]))
+
+(log/merge-config!
+ {:min-level [["clojuredocs.*" :trace]
+              ["datomic.*" :warn]]
+  :ns-filter #{"clojuredocs.*"
+               "datomic.*"}
+  :appenders {:println {:enabled? false}
+              :spit    (tac/spit-appender {:fname "logs/clojuredocs.log"})}})
 
 (defn load-system!
   []
@@ -41,3 +53,4 @@
 (def secrets #(using :secrets))
 (def server #(using :server))
 (def datomic #(using :datomic))
+(def db #(d/db (datomic)))
