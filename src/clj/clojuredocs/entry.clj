@@ -6,7 +6,7 @@
             [clojuredocs.pages :as pages]
             [clojuredocs.pages.common :as common]
             [clojuredocs.util :as util]
-            [compojure.core :refer (defroutes GET context)]
+            [compojure.core :refer (GET context)]
             [compojure.response :refer (Renderable render)]
             [compojure.route :refer (not-found)]
             [hiccup.page :refer (html5)]
@@ -21,7 +21,10 @@
             [ring.middleware.session.cookie :refer [cookie-store]]
             [ring.util.response :refer [response]]
             [somnium.congomongo :as mon]
-            [taoensso.timbre :as log]))
+            [taoensso.timbre :as log]
+            [compojure.core :as compojure]
+            [compojure.core :as cc]
+            [datomic.api :as d]))
 
 (defn decode-body [content-length body]
   (when (and content-length
@@ -79,26 +82,6 @@
            :headers {"Location" (str "/" ns "/" (util/cd-encode name))}}))
       (catch Exception e nil))))
 
-(defroutes old-url-redirects
-  (GET "/clojure_core/:ns/:name" [ns name] (redirect-to-var ns name))
-  (GET "/clojure_core/:version/:ns/:name" [ns name] (redirect-to-var ns name))
-  (GET "/quickref/*" [] {:status 301 :headers {"Location" "/quickref"}})
-  (GET "/clojure_core" [] {:status 301 :headers {"Location" "/core-library"}})
-  (GET "/clojure_core/:ns" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
-  (GET "/v/:id" [id] (old-v-page-redirect id))
-  (GET "/examples_style_guide" [] {:status 301 :headers {"Location" "/examples-styleguide"}})
-  (GET "/Clojure%20Core/:ns" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
-  (GET "/Clojure%20Core/:ns/" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
-  (GET "/Clojure%20Core" [] {:status 301 :headers {"Location" "/core-library"}})
-  (GET "/clojure_core/:ns/" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
-  (GET "/clojure_core" [] {:status 301 :headers {"Location" "/core-library"}}))
-
-(defroutes _routes
-  (context "/api" [] api.server/routes)
-  (var pages/routes)
-  ;; Redirect old urls
-  (var old-url-redirects)
-  (not-found (fn [r] (common/four-oh-four r))))
 
 ;; TODO: move to different namespace
 (defn urandom
@@ -185,13 +168,36 @@
          :body (hiccup->html-string
                 (common/five-hundred (:user r)))}))))
 
-(def routes
-  (-> _routes
+(defn wrap-datomic
+  [handler datomic]
+  (fn [req]
+    (handler (assoc req :datomic datomic :db (d/db datomic)))))
+
+(defn make-routes
+  [{:keys [api-routes page-routes datomic]}]
+  (-> (compojure/routes
+       (context "/api" [] api-routes)
+       page-routes
+       ;; Redirect old urls
+       (GET "/clojure_core/:ns/:name" [ns name] (redirect-to-var ns name))
+       (GET "/clojure_core/:version/:ns/:name" [ns name] (redirect-to-var ns name))
+       (GET "/quickref/*" [] {:status 301 :headers {"Location" "/quickref"}})
+       (GET "/clojure_core" [] {:status 301 :headers {"Location" "/core-library"}})
+       (GET "/clojure_core/:ns" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
+       (GET "/v/:id" [id] (old-v-page-redirect id))
+       (GET "/examples_style_guide" [] {:status 301 :headers {"Location" "/examples-styleguide"}})
+       (GET "/Clojure%20Core/:ns" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
+       (GET "/Clojure%20Core/:ns/" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
+       (GET "/Clojure%20Core" [] {:status 301 :headers {"Location" "/core-library"}})
+       (GET "/clojure_core/:ns/" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
+       (GET "/clojure_core" [] {:status 301 :headers {"Location" "/core-library"}})
+       (not-found (fn [r] (common/four-oh-four r))))
       promote-session-user
       decode-edn-body
       wrap-keyword-params
       wrap-nested-params
       wrap-params
+      (wrap-datomic datomic)
       (wrap-session {:store session-store})
       (wrap-file "resources/public" {:allow-symlinks? true})
       (wrap-file-info {"woff" "application/font-woff"

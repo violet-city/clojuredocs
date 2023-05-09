@@ -1,5 +1,5 @@
 (ns clojuredocs.api.server
-  (:require [compojure.core :refer (defroutes GET POST DELETE PATCH) :as cc]
+  (:require [compojure.core :refer (GET POST DELETE PATCH) :as cc]
             [compojure.route :refer (not-found)]
             [somnium.congomongo :as mon]
             [slingshot.slingshot :refer [try+ throw+]]
@@ -30,23 +30,6 @@
   {:body (memo-all-see-alsos-relations-map)
    :headers {"Content-Type" "application/edn"}})
 
-(defroutes _routes
-  (POST "/examples" [] examples/post-example-handler)
-  (DELETE "/examples/:id" [id] (examples/delete-example-handler id))
-  (PATCH "/examples/:id" [id] (examples/patch-example-handler id))
-
-  (POST "/see-alsos" [] see-alsos/post-see-also-handler)
-  (DELETE "/see-alsos/:id" [id] (see-alsos/delete-see-also-handler id))
-
-  (POST "/notes" [] notes/post-note-handler)
-  (PATCH "/notes/:id" [id] (notes/patch-note-handler id))
-  (DELETE "/notes/:id" [id] (notes/delete-note-handler id))
-
-  (GET "/exports/see-alsos-relations" [] see-alsos-relations-handler)
-
-  (not-found
-   {:status 404
-    :body {:message "Route not found"}}))
 
 (defn string-body? [r]
   (string? (:body r)))
@@ -99,8 +82,21 @@
     (-> (h r)
         (assoc-in [:headers "Content-Type"] "application/edn;charset=utf-8"))))
 
-(def routes
-  (-> _routes
+(defn make-routes
+  []
+  (-> (compojure.core/routes
+       (POST "/examples" [] examples/post-example-handler)
+       (DELETE "/examples/:id" [id] (examples/delete-example-handler id))
+       (PATCH "/examples/:id" [id] (examples/patch-example-handler id))
+       (POST "/see-alsos" [] see-alsos/post-see-also-handler)
+       (DELETE "/see-alsos/:id" [id] (see-alsos/delete-see-also-handler id))
+       (POST "/notes" [] notes/post-note-handler)
+       (PATCH "/notes/:id" [id] (notes/patch-note-handler id))
+       (DELETE "/notes/:id" [id] (notes/delete-note-handler id))
+       (GET "/exports/see-alsos-relations" [] see-alsos-relations-handler)
+       (not-found
+        {:status 404
+         :body {:message "Route not found"}}))
       wrap-mongo-id->str
       wrap-str->mongo-id
       wrap-render-errors

@@ -2,9 +2,10 @@
   (:require [clojure.edn :as edn]
             [k16.gx.beta.core :as gx]
             [k16.gx.beta.system :as gx.system]
+            [clojuredocs.query :as query]
             [taoensso.timbre :as log]
             [taoensso.timbre.appenders.core :as tac]
-            [clojuredocs.query :as query]
+            [clojure.core]
             [datomic.api :as d]))
 
 (log/merge-config!
@@ -35,22 +36,13 @@
 
 (def dev-selector [:reveal :shadow])
 
-(defn dev!
-  []
-  (load-system!)
-  @(gx.system/signal! ::system :gx/start app-selector)
-  @(gx.system/signal! ::system :gx/start dev-selector)
-  ::loaded)
-
 (defn start!
   []
-  @(gx.system/signal! ::system :gx/start app-selector)
-  @(gx.system/signal! ::system :gx/resume dev-selector))
+  @(gx.system/signal! ::system :gx/start))
 
 (defn stop!
   []
-  @(gx.system/signal! ::system :gx/suspend dev-selector)
-  @(gx.system/signal! ::system :gx/stop app-selector))
+  @(gx.system/signal! ::system :gx/stop))
 
 (defn failures
   []
@@ -73,4 +65,46 @@
 (def secrets #(using :secrets))
 (def server #(using :server))
 (def datomic #(using :datomic))
+(def routes #(using :routes))
 (def db #(d/db (datomic)))
+
+(comment
+
+  (tap> (query/top-contribs (db)))
+  (tap> (query/recently-updated (db)))
+
+  (tap>
+   (d/q
+    '{:find  [?e ?email]
+      :in    [$]
+      :where [[?e :user/email ?email]]}
+    (db)))
+
+  (let [emails   (for [id (range 100)]
+                   {:user/email (str "user" id "@violet.city")})
+        examples (shuffle
+                  (for [id (range 2000)]
+                    {:example/body (str "body " id)}))
+        data     (loop [[email & emails] emails
+                        examples         examples
+                        output           []]
+                   (if-not (seq examples)
+                     output
+                     (let [amount (rand-int 40)]
+                       (recur emails
+                              (drop amount examples)
+                              (into output (for [example (take amount examples)]
+                                             (assoc example :example/author [:user/email (:user/email email)])))))))]
+    @(d/transact (datomic) emails)
+    (doseq [batch (partition-all 100 data)]
+      @(d/transact (datomic) batch))
+    (tap> [:done]))
+
+  @(d/transact
+    (datomic)
+    [{:user/email "alex@violet.city"}])
+  @(d/transact
+    (datomic)
+    [{:example/body   "testing"
+      :example/author [:user/email "alex@violet.city"]}])
+  )

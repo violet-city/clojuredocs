@@ -1,6 +1,6 @@
 (ns clojuredocs.pages
   (:require [clojure.string :as str]
-            [compojure.core :refer (defroutes GET POST)]
+            [compojure.core :as compojure :refer (GET POST)]
             [ring.util.response :refer (redirect)]
             [somnium.congomongo :as mon]
             [clojuredocs.util :as util]
@@ -306,58 +306,60 @@
            [:a {:href (str "/search?q=" query "&page=" (inc page))} "next page"]
            "next page")]]]})))
 
-(defroutes routes
-  (GET "/robots.txt" [] robots-resp)
-  (GET "/logout" [] logout-resp)
-  (GET "/examples-styleguide" [] examples-styleguide-handler)
+(defn make-routes
+  []
+  (compojure/routes
+    (GET "/robots.txt" [] robots-resp)
+    (GET "/logout" [] logout-resp)
+    (GET "/examples-styleguide" [] examples-styleguide-handler)
 
-  (GET "/core-library" [] core-library-handler)
-  (GET "/core-library/vars" [] core-library-vars-handler)
+    (GET "/core-library" [] core-library-handler)
+    (GET "/core-library/vars" [] core-library-vars-handler)
 
-  (GET "/concepts/:concept" [concept] (concept-page-handler concept))
+    (GET "/concepts/:concept" [concept] (concept-page-handler concept))
 
-  (GET "/search" [] search-page-handler)
+    (GET "/search" [] search-page-handler)
 
-  #_(GET "/jobs" [] jobs/list-handler)
-  #_(GET "/jobs/post" [] jobs/post-handler)
-  #_(GET "/jobs/about" [] jobs/about-handler)
-  #_(GET "/jobs/:job-id" [job-id] (jobs/single-handler job-id))
-  #_(GET "/jobs/:job-id/:url-slug" [job-id] (jobs/single-handler job-id))
+    #_(GET "/jobs" [] jobs/list-handler)
+    #_(GET "/jobs/post" [] jobs/post-handler)
+    #_(GET "/jobs/about" [] jobs/about-handler)
+    #_(GET "/jobs/:job-id" [job-id] (jobs/single-handler job-id))
+    #_(GET "/jobs/:job-id/:url-slug" [job-id] (jobs/single-handler job-id))
 
-  (GET "/ac-search" [] var-search-handler)
-  (GET "/ac-vars" [] ac-vars-handler)
+    (GET "/ac-search" [] var-search-handler)
+    (GET "/ac-vars" [] ac-vars-handler)
 
-  (GET "/" [] intro/page-handler)
-  (GET "/u/:login" [login] (user/page-handler login "github"))
-  (GET "/uc/:login" [login] (user/page-handler login "clojuredocs"))
+    (GET "/" [] intro/page-handler)
+    (GET "/u/:login" [login] (user/page-handler login "github"))
+    (GET "/uc/:login" [login] (user/page-handler login "clojuredocs"))
 
-  ;; Account Migration
-  (GET "/migrate-account" [] user/migrate-account-handler)
-  (POST "/migrate-account/send-email" [] user/send-email-handler)
-  (GET "/migrate-account/migrate/:migration-key" [migration-key]
-    (user/migrate-account-migrate-handler migration-key))
-  (POST "/migrate-account/migrate/:migration-key" [migration-key]
-    (user/post-migrate-account-migrate-handler migration-key))
+    ;; Account Migration
+    (GET "/migrate-account" [] user/migrate-account-handler)
+    (POST "/migrate-account/send-email" [] user/send-email-handler)
+    (GET "/migrate-account/migrate/:migration-key" [migration-key]
+         (user/migrate-account-migrate-handler migration-key))
+    (POST "/migrate-account/migrate/:migration-key" [migration-key]
+          (user/post-migrate-account-migrate-handler migration-key))
 
-  ;; Dev Stuff
-  (GET "/dev/styleguide" [] dev/styleguide-handler)
-  (GET "/dev/styleguide/search" [] dev/search-styleguide-handler)
-  (GET "/dev/styleguide/examples" [] dev/examples-styleguide-handler)
-  (GET "/dev/styleguide/inspector" [] dev/styleguide-inspector-handler)
-  (GET "/dev/search-perf" [] dev/perf-handler)
-  (GET "/dev/api" [] dev/api-docs-handler)
+    ;; Dev Stuff
+    (GET "/dev/styleguide" [] dev/styleguide-handler)
+    (GET "/dev/styleguide/search" [] dev/search-styleguide-handler)
+    (GET "/dev/styleguide/examples" [] dev/examples-styleguide-handler)
+    (GET "/dev/styleguide/inspector" [] dev/styleguide-inspector-handler)
+    (GET "/dev/search-perf" [] dev/perf-handler)
+    (GET "/dev/api" [] dev/api-docs-handler)
 
-  (GET "/gh-callback*" {{path :*} :route-params} (gh-auth/callback-handler path))
-  (GET "/quickref" [] quickref/page-handler)
-  (GET "/ex/:id" [id] (vars/example-handler id))
+    (GET "/gh-callback*" {{path :*} :route-params} (gh-auth/callback-handler path))
+    (GET "/quickref" [] quickref/page-handler)
+    (GET "/ex/:id" [id] (vars/example-handler id))
 
-  (GET "/:ns" [ns] (nss/page-handler ns))
+    (GET "/:ns" [ns] (nss/page-handler ns))
 
-  (GET "/:ns/:name" [ns name] (vars/var-page-handler ns name))
+    (GET "/:ns/:name" [ns name] (vars/var-page-handler ns name))
 
-  (GET "/:ns/:name" [ns name] ;; ns unmunging catch
-    (fn [r]
-      (let [{:keys [ns name] :as v} (lookup-var-expand ns name)]
-        (when v
-          {:status 307
-           :headers {"Location" (str "/" ns "/" (util/cd-encode name))}})))))
+    (GET "/:ns/:name" [ns name] ;; ns unmunging catch
+         (fn [r]
+           (let [{:keys [ns name] :as v} (lookup-var-expand ns name)]
+             (when v
+               {:status 307
+                :headers {"Location" (str "/" ns "/" (util/cd-encode name))}}))))))

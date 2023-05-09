@@ -2,6 +2,8 @@
   (:require [clojuredocs.css :as css]
             [clojuredocs.datomic :as datomic]
             [clojuredocs.entry :as entry]
+            [clojuredocs.pages :as pages]
+            [clojuredocs.api.server :as api.server]
             [clojuredocs.env :as env]
             [garden.core :as garden]
             [ring.adapter.jetty :as jetty]
@@ -23,27 +25,42 @@
                             (log/info ::stopping name)
                             (stop node))))))
 
+(def routes
+  (component
+    ::routes
+    (fn [{:keys [props]}]
+      (let [pages-routes (pages/make-routes)
+            api-routes   (api.server/make-routes)]
+        (entry/make-routes {:datomic     (:datomic props)
+                            :api-routes  api-routes
+                            :page-routes pages-routes})))))
+
 (def app
   (component
     ::app
-    (fn [_]
+    (fn [{:keys [props]}]
       {:port      (env/int :port 8080)
-       :entry     #'entry/routes
+       :entry     (:routes props)
        :mongo-url (env/str :mongo-url)})))
 
 (def server
   (component
     ::server
     (fn [node]
-      (let [{:keys [props]} node
+      (let [{:keys [props]}      node
             {:keys [port entry]} (:app props)]
         (jetty/run-jetty
           (fn [r]
-            (log/info ::awesome r)
-            (let [resp (entry r)]
-              (if (:status resp)
-                resp
-                (assoc resp :status 200))))
+            (tap> props)
+            (try
+              (let [resp (entry r)]
+                (if (:status resp)
+                  resp
+                  (assoc resp :status 200)))
+              (catch Throwable t
+                (tap> t)
+                {:status 500
+                 :body   "custom"})))
           {:port port :join? false})))
     (fn [node]
       (.stop (:value node)))))

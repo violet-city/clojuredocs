@@ -5,7 +5,8 @@
             [fogus.unk :refer (memo-ttl)]
             [clojuredocs.pages.common :as common]
             [clojuredocs.syntax :as syntax]
-            [clojuredocs.pages.jobs :as jobs]))
+            [clojuredocs.pages.jobs :as jobs]
+            [clojuredocs.query :as query]))
 
 (defmulti $render-recently-updated :type)
 
@@ -256,7 +257,7 @@
          ", and then add an example for your favorite var (or pick one from the list)."]
         [:p "In addition to examples, you also have the ability to add 'see also' references between vars."]]]]]]])
 
-(defn top-contribs []
+(defn top-contribs [db]
   (let [scores (atom {})]
     (doseq [{:keys [author _id]} (mon/fetch :examples :where {:deleted-at nil})]
       (let [editors (->> (mon/fetch :example-histories :where {:example-id _id})
@@ -294,10 +295,10 @@
          reverse
          (take limit))))
 
-(defn page-handler [{:keys [user]}]
+(defn page-handler [{:keys [user db]}]
   (-> {:content ($index
-                 (top-contribs)
-                 (recently-updated))
+                 (query/top-contribs db)
+                 (query/recently-updated db))
        :body-class "intro-page"
        :hide-search true
        :user user
