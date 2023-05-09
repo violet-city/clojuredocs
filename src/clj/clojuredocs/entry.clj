@@ -1,26 +1,26 @@
 (ns clojuredocs.entry
-  (:use [ring.middleware
-         file
-         file-info
-         session
-         params
-         nested-params
-         multipart-params
-         keyword-params]
-        [ring.middleware.session.cookie :only (cookie-store)]
-        [ring.util.response :only (response)])
-  (:require [clojuredocs.config :as config]
+  (:require [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [clojuredocs.api.server :as api.server]
+            [clojuredocs.config :as config]
+            [clojuredocs.pages :as pages]
+            [clojuredocs.pages.common :as common]
+            [clojuredocs.util :as util]
             [compojure.core :refer (defroutes GET context)]
             [compojure.response :refer (Renderable render)]
             [compojure.route :refer (not-found)]
             [hiccup.page :refer (html5)]
-            [clojuredocs.util :as util]
-            [clojuredocs.pages.common :as common]
-            [clojuredocs.pages :as pages]
-            [clojuredocs.api.server :as api.server]
-            [somnium.congomongo :as mon]
-            [clojure.edn :as edn]
             [prone.middleware :as prone]
+            [ring.middleware.file :refer :all]
+            [ring.middleware.file-info :refer :all]
+            [ring.middleware.keyword-params :refer :all]
+            [ring.middleware.multipart-params :refer :all]
+            [ring.middleware.nested-params :refer :all]
+            [ring.middleware.params :refer :all]
+            [ring.middleware.session :refer :all]
+            [ring.middleware.session.cookie :refer [cookie-store]]
+            [ring.util.response :refer [response]]
+            [somnium.congomongo :as mon]
             [taoensso.timbre :as log]))
 
 (defn decode-body [content-length body]
@@ -100,9 +100,17 @@
   (var old-url-redirects)
   (not-found (fn [r] (common/four-oh-four r))))
 
+;; TODO: move to different namespace
+(defn urandom
+  [n]
+  (with-open [in (io/input-stream (io/file "/dev/urandom"))]
+    (let [buf (byte-array n)
+          _ (.read in buf)]
+      buf)))
+
 (def session-store
   (cookie-store
-   {:key config/session-key
+   {:key    (urandom 16)
     :domain ".clojuredocs.org"}))
 
 (defn promote-session-user [h]
