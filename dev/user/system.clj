@@ -1,6 +1,7 @@
 (ns user.system
   (:require [user.reveal :as reveal]
             [user.shadow :as shadow]))
+
 (def reveal
   {:gx/start   {:gx/processor reveal/start-reveal}
    :gx/resume  {:gx/processor reveal/splash-reveal}

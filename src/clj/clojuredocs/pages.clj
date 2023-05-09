@@ -42,6 +42,7 @@
           util/markdown)]]}))
 
 (defn core-library-handler [{:keys [user uri]}]
+  (tap> [user uri])
   (common/$main
    {:body-class "core-library-page"
     :title "Clojure's Core Library | ClojureDocs - Community-Powered Clojure Documentation and Examples"

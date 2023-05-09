@@ -8,9 +8,11 @@
            environ/environ.core        {:mvn/version "0.3.1"}
            io.github.kepler16/gx.cljc  {:git/tag "v2.9.1" :git/sha "9962ed1"}
            metosin/malli               {:mvn/version "0.10.1"}
+           lambdaisland/uri            {:mvn/version "1.15.125"}
            metosin/reitit              {:mvn/version "0.6.0"}
            mysql/mysql-connector-java  {:mvn/version "5.1.25"}
            nrepl/nrepl                 {:mvn/version "0.6.0"}
+           markdown-clj/markdown-clj   {:mvn/version "1.11.4"}
            com.wsscode/pathom3         {:mvn/version "2022.10.19-alpha"}
            nsfw/nsfw                   {:mvn/version "0.11.72" :exclusions [aleph/aleph org.clojure/core.async org.clojure/clojurescript]}
            org.clojure/clojure         {:mvn/version "1.11.1"}

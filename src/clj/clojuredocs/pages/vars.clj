@@ -61,6 +61,7 @@
     " ago."]
    [:div.note-body
     (-> (util/markdown body)
+        #_#_
         (str/replace #"<pre><code>" "<pre class=\"brush: clojure\">")
         (str/replace #"</code></pre>" "</pre>"))]])
 
@@ -202,7 +203,7 @@
 
 (defn $example-body [{:keys [body]}]
   [:div.example-body
-   [:pre.raw-example {:class "brush: clojure"} body]])
+   [:pre [:code body]]])
 
 (defn $example-history-point [{:keys [user body created-at updated-at] :as ex}]
   [:div.var-example

@@ -4,7 +4,8 @@
             [clojuredocs.config :as config]
             [clojuredocs.env :as env]
             [clojuredocs.github :as gh]
-            [clojuredocs.search :as search]))
+            [clojuredocs.search :as search]
+            [markdown.core :as md]))
 
 (defn gh-auth-url [& [redirect-to-after-auth-url]]
   (let [redirect-url (str "/gh-callback" redirect-to-after-auth-url)]
@@ -337,8 +338,9 @@ document.location.href = noddy.href;
   (try
     (-> path
         slurp
-        util/markdown)
+        md/md-to-html-string)
     (catch java.io.FileNotFoundException e
+      (tap> e)
       nil)))
 
 (defn prep-for-syntaxhighligher [s]

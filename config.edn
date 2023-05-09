@@ -1,7 +1,12 @@
 {:routes   {:gx/component clojuredocs.system/routes
             :gx/props     {:datomic (gx/ref :datomic)}}
+ :router   {:gx/component clojuredocs.system/router
+            :gx/props     {:datomic (gx/ref :datomic)}}
+ :service  {:gx/component clojuredocs.system/service
+            :gx/props     {:compojure (gx/ref :routes)
+                           :router    (gx/ref :router)}}
  :app      {:gx/component clojuredocs.system/app
-            :gx/props     {:routes (gx/ref :routes)}}
+            :gx/props     {:service (gx/ref :service)}}
  :server   {:gx/component clojuredocs.system/server
             :gx/props     {:app (gx/ref :app)}}
  :mongo    {:gx/component clojuredocs.system/mongo
@@ -16,11 +21,24 @@
  :datomic  {:gx/component clojuredocs.system/datomic
             :gx/props     {:uri    (:datomic/uri (gx/ref :secrets))
                            :schema [;; User
-                                    {:db/ident       :user/email
-                                     :db/doc         "User email"
+                                    {:db/ident       :user/id
+                                     :db/doc         "Identification of the user. Could be a username, email or opaque ID."
                                      :db/valueType   :db.type/string
+                                     :db/cardinality :db.cardinality/one}
+                                    {:db/ident       :user/source
+                                     :db/doc         "Method by which the user was created."
+                                     :db/valueType   :db.type/string
+                                     :db/cardinality :db.cardinality/one}
+                                    {:db/ident       :user/id+source
+                                     :db/doc         "The combination of user/id and user/source. Unique for each user."
+                                     :db/valueType   :db.type/tuple
+                                     :db/tupleAttrs  [:user/id :user/source]
                                      :db/cardinality :db.cardinality/one
                                      :db/unique      :db.unique/identity}
+                                    {:db/ident       :user/avatar
+                                     :db/doc         "Image depicting the user"
+                                     :db/valueType   :db.type/uri
+                                     :db/cardinality :db.cardinality/one}
                                     ;; Examples
                                     {:db/ident       :example/body
                                      :db/doc         "Content of the example"
@@ -32,6 +50,10 @@
                                      :db/cardinality :db.cardinality/one}
                                     {:db/ident       :example/derivative-of
                                      :db/doc         "Reference to the original example"
+                                     :db/valueType   :db.type/ref
+                                     :db/cardinality :db.cardinality/one}
+                                    {:db/ident       :example/for
+                                     :db/doc         "Entity the example is for"
                                      :db/valueType   :db.type/ref
                                      :db/cardinality :db.cardinality/one}
                                     ;; Namespaces

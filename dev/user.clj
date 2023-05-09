@@ -73,38 +73,13 @@
   (tap> (query/top-contribs (db)))
   (tap> (query/recently-updated (db)))
 
-  (tap>
-   (d/q
-    '{:find  [?e ?email]
-      :in    [$]
-      :where [[?e :user/email ?email]]}
-    (db)))
+  (d/q
+   '{:find [?is]
+     :where [[?u :user/source "github"]
+             [?u :user/id+source ?is]]}
+   (db)
+   )
 
-  (let [emails   (for [id (range 100)]
-                   {:user/email (str "user" id "@violet.city")})
-        examples (shuffle
-                  (for [id (range 2000)]
-                    {:example/body (str "body " id)}))
-        data     (loop [[email & emails] emails
-                        examples         examples
-                        output           []]
-                   (if-not (seq examples)
-                     output
-                     (let [amount (rand-int 40)]
-                       (recur emails
-                              (drop amount examples)
-                              (into output (for [example (take amount examples)]
-                                             (assoc example :example/author [:user/email (:user/email email)])))))))]
-    @(d/transact (datomic) emails)
-    (doseq [batch (partition-all 100 data)]
-      @(d/transact (datomic) batch))
-    (tap> [:done]))
+  (d/pull (db) [:user/id+source] [:user/id+source ["ehCnaS34" "github"]])
 
-  @(d/transact
-    (datomic)
-    [{:user/email "alex@violet.city"}])
-  @(d/transact
-    (datomic)
-    [{:example/body   "testing"
-      :example/author [:user/email "alex@violet.city"]}])
-  )
+  :keep)

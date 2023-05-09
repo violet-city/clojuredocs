@@ -3,13 +3,16 @@
             [clojuredocs.datomic :as datomic]
             [clojuredocs.entry :as entry]
             [clojuredocs.pages :as pages]
+            [clojuredocs.service :as service]
+            [clojuredocs.router :as router]
             [clojuredocs.api.server :as api.server]
             [clojuredocs.env :as env]
+            [clojure.edn :as edn]
             [garden.core :as garden]
             [ring.adapter.jetty :as jetty]
             [somnium.congomongo :as mon]
-            [taoensso.timbre :as log]))
-
+            [taoensso.timbre :as log]
+            [prone.middleware :as prone]))
 
 (defn component
   ([name start]
@@ -35,32 +38,42 @@
                             :api-routes  api-routes
                             :page-routes pages-routes})))))
 
+(def router
+  (component
+    ::router
+    (fn [{:keys [props]}]
+      (router/make-router props))))
+
+(def service
+  (component
+    ::service
+    (fn [{:keys [props]}]
+      (service/make props))))
+
 (def app
   (component
     ::app
     (fn [{:keys [props]}]
+      (log/info props)
       {:port      (env/int :port 8080)
-       :entry     (:routes props)
+       :entry     (:service props)
        :mongo-url (env/str :mongo-url)})))
 
 (def server
   (component
-    ::server
-    (fn [node]
-      (let [{:keys [props]}      node
-            {:keys [port entry]} (:app props)]
-        (jetty/run-jetty
-          (fn [r]
-            (tap> props)
-            (try
-              (let [resp (entry r)]
-                (if (:status resp)
-                  resp
-                  (assoc resp :status 200)))
-              (catch Throwable t
-                (tap> t)
-                {:status 500
-                 :body   "custom"})))
+   ::server
+   (fn [node]
+     (let [{:keys [props]}      node
+           {:keys [port entry]} (:app props)]
+       (jetty/run-jetty
+        (prone/wrap-exceptions
+         (fn [r]
+           (let [resp (entry r)]
+             (if (:status resp)
+               resp
+               (do
+                 (tap> resp)
+                 (assoc resp :status 200))))))
           {:port port :join? false})))
     (fn [node]
       (.stop (:value node)))))
@@ -142,8 +155,9 @@
   (component
     ::secrets
     (fn [_]
-      ;; TODO: obviously don't store secrets here.
-      {:db/username      "postgres"
-       :db/password      "example"
-       :github/client-id "424c7563785d9f93270c"
-       :datomic/uri      "datomic:dev://localhost:4334/clojuredocs"})))
+      (let [credentials (edn/read-string (slurp ".secrets/credentials.edn"))]
+        ;; TODO: obviously don't store secrets here.
+        (merge
+         credentials
+         {:db/username      "postgres"
+          :db/password      "example"})))))

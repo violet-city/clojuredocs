@@ -1,12 +1,10 @@
 (ns clojuredocs.entry
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
-            [clojuredocs.api.server :as api.server]
             [clojuredocs.config :as config]
-            [clojuredocs.pages :as pages]
             [clojuredocs.pages.common :as common]
             [clojuredocs.util :as util]
-            [compojure.core :refer (GET context)]
+            [compojure.core :as compojure :refer (GET context)]
             [compojure.response :refer (Renderable render)]
             [compojure.route :refer (not-found)]
             [hiccup.page :refer (html5)]
@@ -22,8 +20,6 @@
             [ring.util.response :refer [response]]
             [somnium.congomongo :as mon]
             [taoensso.timbre :as log]
-            [compojure.core :as compojure]
-            [compojure.core :as cc]
             [datomic.api :as d]))
 
 (defn decode-body [content-length body]
@@ -98,6 +94,7 @@
 
 (defn promote-session-user [h]
   (fn [{:keys [session] :as r}]
+    (tap> session)
     (h (assoc r :user (:user session)))))
 
 (defn wrap-long-caching [h]

@@ -4,32 +4,32 @@
 ;; users
 
 (defn get-user
-  [db email]
-  (d/pull db '[*] [:user/email email]))
+  [db id]
+  (d/pull db '[*] [:user/id id]))
 
 (defn examples-created-by
-  [db email]
+  [db id]
   (d/q '{:find  [?e]
          :in    [$ ?u]
          :where [[?e :example/author ?u]]}
        db
-       [:user/email email]))
+       [:user/id id]))
 
 (defn top-contribs
   [db]
-  (let [query  '{:find  [?email ?e]
+  (let [query  '{:find  [?id ?e]
                  :where [[?e :example/author ?a]
-                         [?a :user/email ?email]]}
-        scores (reduce (fn [score [email]]
-                         (update score email (fnil + 0) 4))
+                         [?a :user/id ?id]]}
+        scores (reduce (fn [score [id]]
+                         (update score id (fnil + 0) 4))
                        {}
                        (d/q query db))]
     (->> scores
          (sort-by second >)
          (take 50)
-         (map (fn [[email score]]
-                {:user/email email
-                 :score      score})))))
+         (map (fn [[id score]]
+                {:user/id id
+                 :score   score})))))
 
 (defn recently-updated
   [db]
@@ -40,5 +40,19 @@
          (sort-by second)
          (take 10)
          (map (fn [[e]]
-                (d/pull db '[:example/body {:example/author [:user/email]}] e)))
+                (d/pull db '[:example/body {:example/author [:user/id]}] e)))
          (reverse))))
+
+
+(def examples-for-var-q
+  '{:find  [?e]
+    :in    [$ ?ns ?name]
+    :where [[?e :example/for ?v]
+            [?n :namespace/symbol ?ns]
+            [?v :var/ns ?n]
+            [?v :var/name ?name]
+            ]})
+
+(defn examples-for-var [db {:keys [ns name]}]
+  (let [result (d/q examples-for-var-q db ns name)]
+    (sequence result)))

@@ -32,3 +32,4 @@ TAGS
 /.idea
 /clojuredocs.iml
 /logs
+/.secrets
