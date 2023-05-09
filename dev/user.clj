@@ -15,22 +15,42 @@
   :appenders {:println {:enabled? false}
               :spit    (tac/spit-appender {:fname "logs/clojuredocs.log"})}})
 
+(defn load-config!
+  []
+  (edn/read-string (slurp "config.edn")))
+
 (defn load-system!
   []
   (gx.system/register!
     ::system
     {:context gx/default-context
-     :graph   (-> (edn/read-string (slurp "config.edn"))
+     :graph   (-> (load-config!)
                   (assoc :reveal {:gx/component 'user.system/reveal})
                   (assoc :shadow {:gx/component 'user.system/shadow}))}))
 
+(def app-selector
+  (->> (load-config!)
+       (keys)
+       (into [])))
+
+(def dev-selector [:reveal :shadow])
+
+(defn dev!
+  []
+  (load-system!)
+  @(gx.system/signal! ::system :gx/start app-selector)
+  @(gx.system/signal! ::system :gx/start dev-selector)
+  ::loaded)
+
 (defn start!
   []
-  @(gx.system/signal! ::system :gx/start))
+  @(gx.system/signal! ::system :gx/start app-selector)
+  @(gx.system/signal! ::system :gx/resume dev-selector))
 
 (defn stop!
   []
-  @(gx.system/signal! ::system :gx/stop))
+  @(gx.system/signal! ::system :gx/suspend dev-selector)
+  @(gx.system/signal! ::system :gx/stop app-selector))
 
 (defn failures
   []

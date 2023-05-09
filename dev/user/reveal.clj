@@ -1,5 +1,6 @@
 (ns user.reveal
-  (:require [vlaaad.reveal :as r]))
+  (:require [vlaaad.reveal :as r]
+            [taoensso.timbre :as log]))
 
 (defn start-reveal
   [_]
@@ -16,6 +17,13 @@
       (tap> t)
       (tap> node))))
 
-(def component
-  {:gx/start {:gx/processor start-reveal}
-   :gx/stop  {:gx/processor stop-reveal}})
+(defn splash-reveal
+  [node]
+  (log/info ::suspend)
+  (tap> [:splash])
+  (:value node))
+
+(defn clear-reveal
+  [node]
+  (tap> [:clear])
+  (:value node))
