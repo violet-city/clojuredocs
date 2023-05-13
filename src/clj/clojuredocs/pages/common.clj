@@ -202,12 +202,6 @@
            :scrolling "0"
            :width "80"
            :height "20"}]
-         #_[:iframe {:src "/github-btn.html?user=zk&repo=clojuredocs&type=fork&count=true"
-                     :allowtransparency "true"
-                     :frameborder "0"
-                     :scrolling "0"
-                     :width "80"
-                     :height "20"}]
          [:a.twitter-share-button {:href "https://twitter.com/share"
                                    :data-url "http://clojuredocs.org"
                                    :data-text "Community-powered docs and examples for #Clojure"
@@ -301,14 +295,6 @@ document.location.href = noddy.href;
                     (take n)
                     (apply str))
                "...")))
-
-(defn $recent [recent]
-  (when-not (empty? recent)
-    [:div.recent-pages
-     [:h5 "Recent"]
-     [:ul
-      (for [{:keys [text href]} recent]
-        [:li [:a {:href href} (ellipsis text 10)]])]]))
 
 (defn four-oh-four [{:keys [user]}]
   ($main

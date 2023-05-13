@@ -80,6 +80,10 @@
    (db)
    )
 
-  (d/pull (db) [:user/id+source] [:user/id+source ["ehCnaS34" "github"]])
+  (d/pull
+   (db)
+   [:user/id+source]
+   [:user/id+source
+    ["ZehCnaS34" "github"]])
 
   :keep)
