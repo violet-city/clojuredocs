@@ -33,3 +33,6 @@ TAGS
 /clojuredocs.iml
 /logs
 /.secrets
+
+/.clj-kondo
+/.lsp

@@ -1,6 +1,30 @@
 (ns clojuredocs.query
   (:require [datomic.api :as d]))
 
+(defn find-namespace
+  [db name]
+  (d/pull db
+          [:namespace/symbol
+           :namespace/docstring]
+          [:namespace/symbol name]))
+
+(defn find-var
+  [db namespace name]
+  (d/pull db
+          [:var/docstring :var/namespace :var/name]
+          [:var/ns+name [namespace name]]))
+
+(defn find-vars
+  [db {:namespace/keys [symbol]}]
+  (->> (d/q '{:find  [(pull ?v [:var/name
+                                :var/namespace
+                                :var/docstring])]
+              :in    [$ ?ns]
+              :where [[?v :var/namespace ?ns]]}
+            db
+            symbol)
+       (map first)))
+
 ;; users
 
 (defn get-user

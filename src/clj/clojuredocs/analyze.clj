@@ -7,11 +7,6 @@
             [clojure.walk :as walk]
             [clojure.java.io :as io]))
 
-(def thing
-  (api/analyze-project-only!
-   {:project-root (io/file ".")}))
-
-
 
 (defn crawl-ns
   [ns]
@@ -26,14 +21,18 @@
    (map second)
    (map meta)
    (map (fn [{:keys [ns name doc]}]
-          {:var/docstring doc
-           :var/name      name
-           :var/ns        [:namespace/symbol ns]}))))
+          (merge
+           (when doc
+             {:var/docstring doc})
+           {:var/name      name
+            :var/namespace (.name ns)})))
+   (distinct)))
 
 (def ns->entities
   (comp
    (map (fn [ns]
-          {:namespace/symbol ns}))))
+          {:namespace/symbol    ns
+           :namespace/docstring (:doc (meta ns))}))))
 
 (defn find-vars
   [ns]
@@ -41,25 +40,15 @@
        (crawl-ns)
        (mapcat #(sequence publics->vars (ns-publics %)))))
 
-(->> 'malli.core
-     (crawl-ns)
-     (mapcat #(sequence publics->vars (ns-publics %)))
+(defn find-nss
+  [ns]
+  (->> (crawl-ns ns)
+       (map (fn [ns]
+              (let [ns (find-ns ns)]
+                (merge
+                 (when-let [doc (:doc (meta ns))]
+                   {:namespace/docstring doc})
+                 {:namespace/symbol (.name ns)}))))))
+
+(->> (find-vars 'malli.core)
      (tap>))
-
-(->> 'malli.core
-     (crawl-ns)
-     (sequence ns->entities)
-     (tap>))
-
-(->> 'cljs.analyzer
-     (crawl-ns)
-     (sequence ns->entities)
-     (tap>))
-
-(crawl-ns 'clojure.core)
-(crawl-ns 'malli.core)
-(crawl-ns 'cljs.analyzer)
-
-(tap>
- (binding [*ns* (find-ns 'clojure.core)]
-   (ns-publics *ns*)))

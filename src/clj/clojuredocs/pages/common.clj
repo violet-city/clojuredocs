@@ -110,22 +110,22 @@
       nil)))
 
 (def clojuredocs-script
-  [:script {:src (str "/cljs/clojuredocs.js?"
+  [:script {:src (str "/assets/cljs/clojuredocs.js?"
                       (md5-path "resources/public/cljs/clojuredocs.js"))}])
 
 (def app-link
   [:link {:rel :stylesheet
-          :href (str "/css/app.css?"
+          :href (str "/assets/css/app.css?"
                      (md5-path "resources/public/css/app.css"))}])
 
 (def bootstrap-link
   [:link {:rel :stylesheet
-          :href (str "/css/bootstrap.min.css?"
+          :href (str "/assets/css/bootstrap.min.css?"
                      (md5-path "resources/public/css/bootstrap.min.css"))}])
 
 (def font-awesome-link
   [:link {:rel :stylesheet
-          :href (str "/css/font-awesome.min.css?"
+          :href (str "/assets/css/font-awesome.min.css?"
                      (md5-path "resources/public/css/font-awesome.min.css"))}])
 
 (def opensearch-link
@@ -210,11 +210,11 @@
        [:script
         "!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');"]]]]
     (when (env/bool :cljs-dev)
-      [:script {:src "/js/fastclick.min.js"}])
+      [:script {:src "/assets/js/fastclick.min.js"}])
     (when (env/bool :cljs-dev)
-      [:script {:src "/js/morpheus.min.js"}])
+      [:script {:src "/assets/js/morpheus.min.js"}])
     (when (env/bool :cljs-dev)
-      [:script {:src "/js/marked.min.js"}])
+      [:script {:src "/assets/js/marked.min.js"}])
     clojuredocs-script
     ($ga-script-tag config/ga-tracking-id)
     ;; mobile safari home screen mode

@@ -1,23 +1,36 @@
 (ns clojuredocs.data
-  (:require [somnium.congomongo :as mon]))
+  (:require [somnium.congomongo :as mon]
+            [datomic.api :as d]
+            [clojuredocs.context :refer [*db*]]))
 
 ;; Examples
 
 (def find-examples-for-q
-  '{:find  [(pull? ?e [*])]
-    :keys  [:example]
-    :in    [$ ?ns ?name ?library-url]
-    :where [[?e :example/var.name ?name]
-            [?e :example/var.ns ?ns]
-            [?e :example/var.library-url ?library-url]]})
+  '{:find  [(pull ?e [*])
+            (pull ?v [*])]
+    :keys  [:example :var]
+    :in    [$ ?n ?name]
+    :where [[?v :var/name ?name]
+            [?v :var/namespace ?n]
+            [?e :example/for ?v]]})
+
 
 (defn find-examples-for [{:keys [ns name library-url]}]
-  (mon/fetch :examples
-             :where {:var.name        name
-                     :var.ns          ns
-                     :var.library-url library-url
-                     :deleted-at      nil}
-             :sort {:created-at 1}))
+  (println name ns)
+  (println (type name) (type ns) *db*)
+  (->> (d/q find-examples-for-q *db* ns name)
+       (map first)))
+
+(defn find-var [{:keys [ns name]}]
+  (println name ns)
+  (println (type name) (type ns) *db*)
+  (->> (d/q '{:find  [(pull ?v [*])]
+              :in    [$ ?n ?name]
+              :where [[?v :var/name ?name]
+                      [?v :var/namespace ?n]]}
+            *db* ns name)
+       (map first)
+       (first)))
 
 ;; Notes
 
