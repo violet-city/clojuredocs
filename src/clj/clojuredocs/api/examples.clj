@@ -28,7 +28,6 @@
         editors
         (concat editors [user])))))
 
-
 (defn body-not-empty [{:keys [body]}]
   (when (empty? body)
     {:message "Whoops, looks like your example is blank."}))
@@ -36,7 +35,6 @@
 (defn var-required [{:keys [var]}]
   (when (empty? var)
     {:message "Please provide the var that your example is about"}))
-
 
 ;; Handlers
 
@@ -61,8 +59,8 @@
 
 (def UpdateExample
   (merge
-    InsertExample
-    {:editors [c/User]}))
+   InsertExample
+   {:editors [c/User]}))
 
 (def InsertExampleHistory
   {:_id org.bson.types.ObjectId
@@ -82,19 +80,19 @@
                           (update-in [:editors] (add-editor user))
                           c/update-timestamps)
           example-history (create-example-history
-                            example
-                            user
-                            (:body example-update))]
+                           example
+                           user
+                           (:body example-update))]
       (when-not example
         (throw+
-          (-> (edn-response {:error "Couldn't find the example you're trying to update."})
-              (assoc :status 422))))
+         (-> (edn-response {:error "Couldn't find the example you're trying to update."})
+             (assoc :status 422))))
       (c/validate! new-example [body-not-empty])
       (c/validate-schema! new-example UpdateExample)
       (c/validate-schema! example-history InsertExampleHistory)
       (mon/update! :examples
-        {:_id (:_id example)}
-        new-example)
+                   {:_id (:_id example)}
+                   new-example)
       (mon/insert! :example-histories example-history)
       {:status 200
        :headers {"Content-Type" "application/edn;charset=utf-8"}
@@ -112,6 +110,6 @@
         (throw+ {:status 401
                  :body {:message "Not authorized to delete that example"}}))
       (mon/update! :examples
-        {:_id _id}
-        (assoc example :deleted-at (util/now)))
+                   {:_id _id}
+                   (assoc example :deleted-at (util/now)))
       {:status 200 :body example})))

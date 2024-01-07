@@ -15,23 +15,20 @@
    :name s/Str
    :library-url s/Str})
 
-
-
 (defn require-login! [user]
   (when-not user
     (throw+
-      {:body {:error "You must be logged in to edit an example."}
-       :status 401})))
+     {:body {:error "You must be logged in to edit an example."}
+      :status 401})))
 
 (defn validate-schema! [payload schema]
   (let [res (s/check schema payload)]
     (when res
       (throw+
-        {:status 421
-         :body {:failures res
-                :schema schema}})))
+       {:status 421
+        :body {:failures res
+               :schema schema}})))
   payload)
-
 
 ;; Validations
 
@@ -44,18 +41,18 @@
   (let [res (run-validations payload validations)]
     (when-not (empty? res)
       (throw+
-        {:status 422
-         :body res}))))
+       {:status 422
+        :body res}))))
 
 (defn parse-mongo-id! [id]
   (try
     (org.bson.types.ObjectId. id)
     (catch java.lang.IllegalArgumentException e
       (throw+
-        {:status 400
-         :body {:message "Couldn't parse mongo id"}}))))
+       {:status 400
+        :body {:message "Couldn't parse mongo id"}}))))
 
-(defn update-timestamps [{:keys [created-at updated-at] :as m}]
+(defn update-timestamps [{:keys [created-at] :as m}]
   (let [now (util/now)
         m (if created-at m (assoc m :created-at now))]
     (assoc m :updated-at now)))

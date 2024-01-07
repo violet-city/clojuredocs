@@ -6,7 +6,6 @@
             #? (:cljs [goog.string :as gstring])
             #? (:cljs [cljs.reader :as reader]))
 
-
   #? (:clj
       (:import [org.pegdown PegDownProcessor]
                [org.pegdown Parser]
@@ -18,7 +17,6 @@
         (when s
           (java.net.URLEncoder/encode s)))
 
-
       (defn url-decode [s]
         (when s
           (java.net.URLDecoder/decode s)))))
@@ -28,14 +26,14 @@
       (defn url-encode
         [string]
         (some-> string
-          str
-          (js/encodeURIComponent)
-          (.replace "+" "%20")))
+                str
+                (js/encodeURIComponent)
+                (.replace "+" "%20")))
 
       (defn url-decode [s]
         (some-> s
-          str
-          js/decodeURIComponent))))
+                str
+                js/decodeURIComponent))))
 
 #? (:clj
     (do
@@ -75,9 +73,9 @@
 
 (defn $var-link [ns name & contents]
   (vec
-    (concat
-      [:a {:href (var-path ns name)}]
-      contents)))
+   (concat
+    [:a {:href (var-path ns name)}]
+    contents)))
 
 #? (:cljs
     (defn navigate-to [url]
@@ -90,14 +88,13 @@
       (when s
         (js/marked s))))
 
-
 #? (:clj
     (defn markdown [s]
       (when s
         (let [pd (PegDownProcessor. (int (bit-or
-                                           Extensions/AUTOLINKS
-                                           Extensions/FENCED_CODE_BLOCKS
-                                           Extensions/TABLES)))]
+                                          Extensions/AUTOLINKS
+                                          Extensions/FENCED_CODE_BLOCKS
+                                          Extensions/TABLES)))]
           (.markdownToHtml pd s)))))
 
 (defn pluralize [n single plural]
@@ -113,7 +110,7 @@
   (str (if (= "github" account-source)
          "/u/"
          "/uc/")
-    login))
+       login))
 
 (defn $avatar [{:keys [email login avatar-url account-source] :as user} & [{:keys [size]}]]
   (let [size (str (or size 32))]
@@ -124,7 +121,7 @@
       {:src (or (str avatar-url "&s=" size)
                 (str "https://www.gravatar.com/avatar/"
                      (md5 email)
-                     "?r=PG&s=" size "&default=identicon")) }]]))
+                     "?r=PG&s=" size "&default=identicon"))}]]))
 
 (defn sformat [& args]
   #?(:cljs
@@ -162,13 +159,12 @@
       :cljs
       (.parse js/JSON s)))
 
-
 #? (:clj
     (defn bson-id
       ([]
        (org.bson.types.ObjectId.))
       ([id-or-str]
-       (org.bson.types.ObjectId/massageToObjectId id-or-str))))
+       (org.bson.types.ObjectId. id-or-str))))
 
 #? (:clj
     (defn uuid []
@@ -186,11 +182,9 @@
     (defn page-data! []
       (reader/read-string (aget js/window "PAGE_DATA"))))
 
-
 (defn is-author? [user o]
   (= (select-keys user [:login :account-source])
      (select-keys (:author o) [:login :account-source])))
-
 
 #? (:cljs
     (defn location-hash []

@@ -39,11 +39,9 @@
         meta-p (str "\\^" iden-p)
         any-p (str "[" ws "]+" "|\\^[^" sep "]+|.")
         patt (re-pattern (str "("
-                              (string/join ")|(" [
-                                                  comment-p
+                              (string/join ")|(" [comment-p
                                                   str-p open-p
-                                                  close-p meta-p iden-p any-p
-                                                  ])
+                                                  close-p meta-p iden-p any-p])
                               ")"))
         keyw-re #"^:"]
     (for [[s comment str-litt open close met iden any] (re-seq patt src)]
@@ -93,11 +91,11 @@
             remain (rest tokens)]
         (if-not (empty? remain)
           (recur remain
-            (if (= kind :other) prev val)
-            level'
-            (conj res [:span
-                       (if stringify-style?
-                         (format-style style)
-                         style)
-                       val]))
+                 (if (= kind :other) prev val)
+                 level'
+                 (conj res [:span
+                            (if stringify-style?
+                              (format-style style)
+                              style)
+                            val]))
           (apply vector :pre.syntaxify (conj res [:span style val])))))))

@@ -1,0 +1,116 @@
+{:routes   {:gx/component clojuredocs.system/routes
+            :gx/props     {:datomic (gx/ref :datomic)}}
+ :router   {:gx/component clojuredocs.system/router
+            :gx/props     {:datomic (gx/ref :datomic)}}
+ :service  {:gx/component clojuredocs.system/service
+            :gx/props     {:compojure (gx/ref :routes)
+                           :router    (gx/ref :router)}}
+ :app      {:gx/component clojuredocs.system/app
+            :gx/props     {:service (gx/ref :service)}}
+ :server   {:gx/component clojuredocs.system/server
+            :gx/props     {:app (gx/ref :app)}}
+ :mongo    {:gx/component clojuredocs.system/mongo
+            :gx/props     {:url      "mongodb://root:example@localhost:27017/clojuredocs"
+                           :username "root"
+                           :password "example"}}
+ :fixtures {:gx/component clojuredocs.system/fixtures
+            :gx/props     {:mongo (gx/ref :mongo)}}
+ :css      {:gx/component clojuredocs.system/css
+            :gx/props     {}}
+ :secrets  {:gx/component clojuredocs.system/secrets}
+ :datomic  {:gx/component clojuredocs.system/datomic
+            :gx/props
+            {:uri (:datomic/uri (gx/ref :secrets))
+             :schema
+             [;; User
+              {:db/ident       :user/id
+               :db/doc         "Identification of the user. Could be a username, email or opaque ID."
+               :db/valueType   :db.type/string
+               :db/cardinality :db.cardinality/one}
+              {:db/ident       :user/source
+               :db/doc         "Method by which the user was created."
+               :db/valueType   :db.type/string
+               :db/cardinality :db.cardinality/one}
+              {:db/ident       :user/id+source
+               :db/doc         "The combination of user/id and user/source. Unique for each user."
+               :db/valueType   :db.type/tuple
+               :db/tupleAttrs  [:user/id :user/source]
+               :db/cardinality :db.cardinality/one
+               :db/unique      :db.unique/identity}
+              {:db/ident       :user/avatar
+               :db/doc         "Image depicting the user"
+               :db/valueType   :db.type/uri
+               :db/cardinality :db.cardinality/one}
+              ;; Notes
+              {:db/ident       :note/body
+               :db/doc         "Content of the note"
+               :db/valueType   :db.type/string
+               :db/cardinality :db.cardinality/one}
+              {:db/ident       :note/author
+               :db/doc         "Reference to the author."
+               :db/valueType   :db.type/ref
+               :db/cardinality :db.cardinality/one}
+              {:db/ident       :note/for
+               :db/doc         "Entity the note is for"
+               :db/valueType   :db.type/ref
+               :db/cardinality :db.cardinality/one}
+              ;; Examples
+              {:db/ident       :example/body
+               :db/doc         "Content of the example"
+               :db/valueType   :db.type/string
+               :db/cardinality :db.cardinality/one}
+              {:db/ident       :example/author
+               :db/doc         "Reference to the author."
+               :db/valueType   :db.type/ref
+               :db/cardinality :db.cardinality/one}
+              {:db/ident       :example/derivative-of
+               :db/doc         "Reference to the original example"
+               :db/valueType   :db.type/ref
+               :db/cardinality :db.cardinality/one}
+              {:db/ident       :example/for
+               :db/doc         "Entity the example is for"
+               :db/valueType   :db.type/ref
+               :db/cardinality :db.cardinality/one}
+              ;; Library
+              {:db/ident       :library/name
+               :db/valueType   :db.type/string
+               :db/doc         "Name of library"
+               :db/cardinality :db.cardinality/one}
+              {:db/ident       :library/uri
+               :db/valueType   :db.type/uri
+               :db/doc         "URL of Library"
+               :db/cardinality :db.cardinality/one
+               :db/unique      :db.unique/identity}
+              {:db/ident       :library/namespace
+               :db/valueType   :db.type/ref
+               :db/doc         "Namespace provided by library"
+               :db/cardinality :db.cardinality/many}
+              ;; Namespaces
+              {:db/ident       :namespace/symbol
+               :db/doc         "Symbol of the namespace"
+               :db/valueType   :db.type/symbol
+               :db/cardinality :db.cardinality/one
+               :db/unique      :db.unique/identity}
+              {:db/ident       :namespace/docstring
+               :db/doc         "Docstring of the namespace"
+               :db/valueType   :db.type/string
+               :db/cardinality :db.cardinality/one}
+              ;; Vars
+              {:db/ident       :var/docstring
+               :db/doc         "Docstring of the var"
+               :db/valueType   :db.type/string
+               :db/cardinality :db.cardinality/one}
+              {:db/ident       :var/namespace
+               :db/doc         "Namespace of var"
+               :db/valueType   :db.type/symbol
+               :db/cardinality :db.cardinality/one}
+              {:db/ident       :var/name
+               :db/doc         "Name of var"
+               :db/valueType   :db.type/symbol
+               :db/cardinality :db.cardinality/one}
+              {:db/ident       :var/ns+name
+               :db/doc         "Identity of var"
+               :db/valueType   :db.type/tuple
+               :db/tupleAttrs  [:var/namespace :var/name]
+               :db/cardinality :db.cardinality/one
+               :db/unique      :db.unique/identity}]}}}

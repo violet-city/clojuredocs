@@ -17,13 +17,15 @@
    more information."
 
   (:require [clj-http.client :as hc]
-            [clojuredocs.util :as u]))
+            [clojuredocs.util :as u]
+            [taoensso.timbre :as log]))
 
 (def login-base-url "https://github.com/login/oauth")
 
 (defn auth-redirect-url
   "Generates a github authorization URL."
   [{:keys [client-id redirect-uri scopes]}]
+  (log/info client-id redirect-uri scopes)
   (str login-base-url
        "/authorize?"
        "client_id=" (u/url-encode client-id) "&"
@@ -40,8 +42,8 @@
               :client_secret client-secret
               :code code}
           res (hc/post (str login-base-url "/access_token")
-                {:query-params qp
-                 :headers {"Accept" "application/json"}})]
+                       {:query-params qp
+                        :headers {"Accept" "application/json"}})]
       (if (= 200 (:status res))
         (u/from-json (:body res))
         {:error "unknown"}))))
@@ -49,5 +51,5 @@
 (defn user [token]
   (when token
     (let [res (hc/get "https://api.github.com/user"
-                {:basic-auth ["token" token]})]
+                      {:basic-auth ["token" token]})]
       (-> res :body u/from-json))))

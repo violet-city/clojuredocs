@@ -20,7 +20,6 @@
        (interpose ", ")
        (reduce str)))
 
-
 ;; Who's in our scenes?
 
 (println "People:" (people-in-scenes scenes))

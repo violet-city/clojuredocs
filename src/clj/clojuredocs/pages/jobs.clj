@@ -192,11 +192,6 @@ Changing the entertainment business is hard work, but we do it sustainably. We i
 
 Outpost Games is proud to be an Equal Opportunity Employer committed to a diverse and inclusive workforce – Minority / Female / Disability / Veteran / Gender Identity / Sexual Orientation."}
 
-
-
-
-
-
            {:job-title "Software Engineer"
             :job-type "Permanent"
             :job-location "Durham, NC"
@@ -540,8 +535,7 @@ You should have knowledge of some of these. Most of all we look for those intere
 * resume/linkedin profile,
 * link to github projects or other work samples.
 
-We want to hear from you. Apply on this page or email your resume to kirasystems@applications.recruiterbox.com with 'Web Developer' in the subject line."
-            }
+We want to hear from you. Apply on this page or email your resume to kirasystems@applications.recruiterbox.com with 'Web Developer' in the subject line."}
            {:job-title "Senior Backend Engineer"
             :job-type "Permanent"
             :job-location "Ann Arbor, MI"
@@ -692,21 +686,21 @@ We offer competitive compensation and great benefits; stock options; learning bu
 
 (defn currency-range [comp]
   (str
-    (format-currency
-      (-> comp :currency))
-    (format-number
-      (-> comp :minimum)
-      (delim-for (-> comp :currency)))
-    "-"
-    (format-number (-> comp :maximum)
-      (delim-for (-> comp :currency)))))
+   (format-currency
+    (-> comp :currency))
+   (format-number
+    (-> comp :minimum)
+    (delim-for (-> comp :currency)))
+   "-"
+   (format-number (-> comp :maximum)
+                  (delim-for (-> comp :currency)))))
 
 (defn equity-range [comp]
   (str
-    (* 100 (-> comp :minimum))
-    "-"
-    (* 100 (-> comp :maximum))
-    "%"))
+   (* 100 (-> comp :minimum))
+   "-"
+   (* 100 (-> comp :maximum))
+   "%"))
 
 (defn $job-preview [{:keys [job-title job-type
                             job-location
@@ -776,33 +770,32 @@ We offer competitive compensation and great benefits; stock options; learning bu
      #_(when posted-at?
          [:div.posted-at.text-right
           {:style "font-size:10px;font-weight:bold;text-transform:uppercase;color:#aaa;margin-top:3px"}
-          "Posted " (util/timeago posted-at) " ago"])
-     ]]])
+          "Posted " (util/timeago posted-at) " ago"])]]])
 
 (defn list-handler [{:keys [params uri user]}]
   (common/$main
-    {:body-class "jobs-page"
-     :title (str "Clojure Jobs | ClojureDocs - Community-Powered Clojure Documentation and Examples")
-     :meta {:description "Find open Clojure jobs from companies that fit you."}
-     :user user
-     :page-uri uri
-     :content
-     [:div.row
-      [:div.col-md-12
-       [:div.list-jobs-header
-        {:style "padding-bottom:5px;margin:0;position:relative;"}
-        [:h2 {:style "text-align:left;margin:0;color:#888;font-size:16px;font-weight:bold;line-height:120%;text-transform:uppercase"}
-         "Latest Clojure Jobs"]
-        [:div {:style "position:absolute;bottom:5px;right:0;font-size:12px"}
-         [:a {:href "/jobs/about"} "About ClojureDocs Jobs"]]]
-       (->> DATA
-            (map (fn [job]
-                   [:div.job-preview-wrapper
-                    ($job-preview job
-                      {:show-apply-button? false
-                       :description? true
-                       :comp? true
-                       :posted-at? true})])))]]}))
+   {:body-class "jobs-page"
+    :title (str "Clojure Jobs | ClojureDocs - Community-Powered Clojure Documentation and Examples")
+    :meta {:description "Find open Clojure jobs from companies that fit you."}
+    :user user
+    :page-uri uri
+    :content
+    [:div.row
+     [:div.col-md-12
+      [:div.list-jobs-header
+       {:style "padding-bottom:5px;margin:0;position:relative;"}
+       [:h2 {:style "text-align:left;margin:0;color:#888;font-size:16px;font-weight:bold;line-height:120%;text-transform:uppercase"}
+        "Latest Clojure Jobs"]
+       [:div {:style "position:absolute;bottom:5px;right:0;font-size:12px"}
+        [:a {:href "/jobs/about"} "About ClojureDocs Jobs"]]]
+      (->> DATA
+           (map (fn [job]
+                  [:div.job-preview-wrapper
+                   ($job-preview job
+                                 {:show-apply-button? false
+                                  :description? true
+                                  :comp? true
+                                  :posted-at? true})])))]]}))
 
 (defn find-job [job-id]
   (->> DATA
@@ -811,8 +804,8 @@ We offer competitive compensation and great benefits; stock options; learning bu
 
 (defn track-job-view [job]
   (mon/update! :job-metrics
-    {:_id (:id job)}
-    {:$inc {:views 1}}))
+               {:_id (:id job)}
+               {:$inc {:views 1}}))
 
 (defn single-handler [job-id]
   (fn [{:keys [params uri user]}]
@@ -820,64 +813,64 @@ We offer competitive compensation and great benefits; stock options; learning bu
       (when job
         (track-job-view job)
         (common/$main
-          {:body-class "jobs-page"
-           :title (str "Clojure Jobs | ClojureDocs - Community-Powered Clojure Documentation and Examples")
-           :user user
-           :page-uri uri
-           :meta {:robots "noindex"}
-           :content
-           [:div.row
-            [:div.col-md-10.col-md-offset-1
-             (let [{:keys [job-description company-description
-                           company-name
-                           job-apply-href]} job]
-               [:div.job-info
-                {:style "border-top:solid #ccc 1px;padding:20px 0px"}
-                [:div
-                 {:style "position:relative;"}
-                 ($job-preview job {:show-apply-button? true})]
-                [:div.job-description
-                 [:h2.section-header "Job Description"]
-                 (util/markdown job-description)]
-                [:br]
-                [:div.company-description
-                 [:h2.section-header "About " company-name]
-                 (util/markdown company-description)]
-                [:br]
-                [:div.apply-now
-                 [:a.btn.btn-success.btn-lg
-                  {:href job-apply-href
-                   :target "_blank"}
-                  "Apply Now"]]])]]})))))
+         {:body-class "jobs-page"
+          :title (str "Clojure Jobs | ClojureDocs - Community-Powered Clojure Documentation and Examples")
+          :user user
+          :page-uri uri
+          :meta {:robots "noindex"}
+          :content
+          [:div.row
+           [:div.col-md-10.col-md-offset-1
+            (let [{:keys [job-description company-description
+                          company-name
+                          job-apply-href]} job]
+              [:div.job-info
+               {:style "border-top:solid #ccc 1px;padding:20px 0px"}
+               [:div
+                {:style "position:relative;"}
+                ($job-preview job {:show-apply-button? true})]
+               [:div.job-description
+                [:h2.section-header "Job Description"]
+                (util/markdown job-description)]
+               [:br]
+               [:div.company-description
+                [:h2.section-header "About " company-name]
+                (util/markdown company-description)]
+               [:br]
+               [:div.apply-now
+                [:a.btn.btn-success.btn-lg
+                 {:href job-apply-href
+                  :target "_blank"}
+                 "Apply Now"]]])]]})))))
 
 (defn post-handler [{:keys [params uri user]}]
   (common/$main
-    {:body-class "post-job-page"
-     :title (str "Post a Job | ClojureDocs - Community-Powered Clojure Documentation and Examples")
-     :user user
-     :page-uri uri
-     :content
-     [:div#page-content]}))
+   {:body-class "post-job-page"
+    :title (str "Post a Job | ClojureDocs - Community-Powered Clojure Documentation and Examples")
+    :user user
+    :page-uri uri
+    :content
+    [:div#page-content]}))
 
 (defn about-handler [{:keys [params uri user]}]
   (common/$main
-    {:body-class "jobs-page"
-     :title (str "About ClojureDocs Jobs | ClojureDocs - Community-Powered Clojure Documentation and Examples")
-     :user user
-     :page-uri uri
-     :content
-     [:div.row
-      [:div.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
-       [:h1
-        {:style "text-align:center;border-bottom:solid #ccc 1px;margin-bottom:10px;padding-bottom:5px;font-size:24px"}
-        "About ClojureDocs Jobs"]
-       [:p "Hey Everybody!"]
-       [:p "So we're trying something new here in the form of a jobs board hosted here on ClojureDocs. We'll be starting slow; rolling out a few listings over the coming weeks while we track how they're doing and adjust."]
-       [:p "Ultimately, I'd like to use this as a way to fund development on the site and cover maintenance costs, so the biggest thing you can do to help out (other than switching jobs) is to get the word out. For those of you working at great Clojure shops, "
-        [:a {:href "mailto:zachary.kim@gmail.com"} "drop me a line"]
-        " and I'll reach out to see if we can get your company listed."]
-       [:p "The goal is to make this work great for everybody. I think that's going to take a few iterations, so let me know if you have any ideas along these lines."]
-       [:p "Thanks!"]
-       [:div "- Zack"]
-       [:div {:style "font-weight:bold;font-size:12px;text-transform:uppercase"}
-        "Oct 11, 2016"]]]}))
+   {:body-class "jobs-page"
+    :title (str "About ClojureDocs Jobs | ClojureDocs - Community-Powered Clojure Documentation and Examples")
+    :user user
+    :page-uri uri
+    :content
+    [:div.row
+     [:div.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
+      [:h1
+       {:style "text-align:center;border-bottom:solid #ccc 1px;margin-bottom:10px;padding-bottom:5px;font-size:24px"}
+       "About ClojureDocs Jobs"]
+      [:p "Hey Everybody!"]
+      [:p "So we're trying something new here in the form of a jobs board hosted here on ClojureDocs. We'll be starting slow; rolling out a few listings over the coming weeks while we track how they're doing and adjust."]
+      [:p "Ultimately, I'd like to use this as a way to fund development on the site and cover maintenance costs, so the biggest thing you can do to help out (other than switching jobs) is to get the word out. For those of you working at great Clojure shops, "
+       [:a {:href "mailto:zachary.kim@gmail.com"} "drop me a line"]
+       " and I'll reach out to see if we can get your company listed."]
+      [:p "The goal is to make this work great for everybody. I think that's going to take a few iterations, so let me know if you have any ideas along these lines."]
+      [:p "Thanks!"]
+      [:div "- Zack"]
+      [:div {:style "font-weight:bold;font-size:12px;text-transform:uppercase"}
+       "Oct 11, 2016"]]]}))

@@ -4,14 +4,14 @@
             [clojuredocs.config :as config]
             [clojuredocs.env :as env]
             [clojuredocs.github :as gh]
-            [clojuredocs.search :as search]))
+            [clojuredocs.search :as search]
+            [markdown.core :as md]))
 
 (defn gh-auth-url [& [redirect-to-after-auth-url]]
   (let [redirect-url (str "/gh-callback" redirect-to-after-auth-url)]
     (gh/auth-redirect-url
-      (merge config/gh-creds
-             {:redirect-uri (config/url redirect-url)}))))
-
+     (merge config/gh-creds
+            {:redirect-uri (config/url redirect-url)}))))
 
 (defn $ga-script-tag [ga-tracking-id]
   (when ga-tracking-id
@@ -110,22 +110,22 @@
       nil)))
 
 (def clojuredocs-script
-  [:script {:src (str "/cljs/clojuredocs.js?"
+  [:script {:src (str "/assets/cljs/clojuredocs.js?"
                       (md5-path "resources/public/cljs/clojuredocs.js"))}])
 
 (def app-link
   [:link {:rel :stylesheet
-          :href (str "/css/app.css?"
+          :href (str "/assets/css/app.css?"
                      (md5-path "resources/public/css/app.css"))}])
 
 (def bootstrap-link
   [:link {:rel :stylesheet
-          :href (str "/css/bootstrap.min.css?"
+          :href (str "/assets/css/bootstrap.min.css?"
                      (md5-path "resources/public/css/bootstrap.min.css"))}])
 
 (def font-awesome-link
   [:link {:rel :stylesheet
-          :href (str "/css/font-awesome.min.css?"
+          :href (str "/assets/css/font-awesome.min.css?"
                      (md5-path "resources/public/css/font-awesome.min.css"))}])
 
 (def opensearch-link
@@ -202,12 +202,6 @@
            :scrolling "0"
            :width "80"
            :height "20"}]
-         #_[:iframe {:src "/github-btn.html?user=zk&repo=clojuredocs&type=fork&count=true"
-                     :allowtransparency "true"
-                     :frameborder "0"
-                     :scrolling "0"
-                     :width "80"
-                     :height "20"}]
          [:a.twitter-share-button {:href "https://twitter.com/share"
                                    :data-url "http://clojuredocs.org"
                                    :data-text "Community-powered docs and examples for #Clojure"
@@ -216,11 +210,11 @@
        [:script
         "!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');"]]]]
     (when (env/bool :cljs-dev)
-      [:script {:src "/js/fastclick.min.js"}])
+      [:script {:src "/assets/js/fastclick.min.js"}])
     (when (env/bool :cljs-dev)
-      [:script {:src "/js/morpheus.min.js"}])
+      [:script {:src "/assets/js/morpheus.min.js"}])
     (when (env/bool :cljs-dev)
-      [:script {:src "/js/marked.min.js"}])
+      [:script {:src "/assets/js/marked.min.js"}])
     clojuredocs-script
     ($ga-script-tag config/ga-tracking-id)
     ;; mobile safari home screen mode
@@ -302,44 +296,37 @@ document.location.href = noddy.href;
                     (apply str))
                "...")))
 
-(defn $recent [recent]
-  (when-not (empty? recent)
-    [:div.recent-pages
-     [:h5 "Recent"]
-     [:ul
-      (for [{:keys [text href]} recent]
-        [:li [:a {:href href} (ellipsis text 10)]])]]))
-
 (defn four-oh-four [{:keys [user]}]
   ($main
-    {:body-class "error-page"
-     :hide-search true
-     :user user
-     :content
-     [:div.row
-      [:div.col-sm-8.col-sm-offset-2
-       [:h1 "404"]
-       [:a.four-oh-four {:href "http://emareaf.deviantart.com/art/Rich-Hickey-321501046"}
-        [:img.four-oh-four {:src "http://fc04.deviantart.net/fs70/f/2012/229/a/6/rich_hickey_by_emareaf-d5bevsm.png"}]]]]}))
+   {:body-class "error-page"
+    :hide-search true
+    :user user
+    :content
+    [:div.row
+     [:div.col-sm-8.col-sm-offset-2
+      [:h1 "404"]
+      [:a.four-oh-four {:href "http://emareaf.deviantart.com/art/Rich-Hickey-321501046"}
+       [:img.four-oh-four {:src "http://fc04.deviantart.net/fs70/f/2012/229/a/6/rich_hickey_by_emareaf-d5bevsm.png"}]]]]}))
 
 (defn five-hundred [{:keys [user]}]
   ($main
-    {:body-class "error-page"
-     :hide-search true
-     :user user
-     :content
-     [:div.row
-      [:div.col-sm-8.col-sm-offset-2
-       [:h1 "500"]
-       [:a.four-oh-four {:href "http://emareaf.deviantart.com/art/Rich-Hickey-321501046"}
-        [:img.four-oh-four {:src "http://fc04.deviantart.net/fs70/f/2012/229/a/6/rich_hickey_by_emareaf-d5bevsm.png"}]]]]}))
+   {:body-class "error-page"
+    :hide-search true
+    :user user
+    :content
+    [:div.row
+     [:div.col-sm-8.col-sm-offset-2
+      [:h1 "500"]
+      [:a.four-oh-four {:href "http://emareaf.deviantart.com/art/Rich-Hickey-321501046"}
+       [:img.four-oh-four {:src "http://fc04.deviantart.net/fs70/f/2012/229/a/6/rich_hickey_by_emareaf-d5bevsm.png"}]]]]}))
 
 (defn memo-markdown-file [path]
   (try
     (-> path
         slurp
-        util/markdown)
+        md/md-to-html-string)
     (catch java.io.FileNotFoundException e
+      (tap> e)
       nil)))
 
 (defn prep-for-syntaxhighligher [s]

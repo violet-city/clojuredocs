@@ -2,103 +2,103 @@
   (:require [clojuredocs.env :as env]))
 
 (def env-vars
-  [{:key :gh-client-id
-    :type :string
-    :doc "GitHub application client id"
+  [{:key       :gh-client-id
+    :type      :string
+    :doc       "GitHub application client id"
     :required? true}
 
-   {:key :gh-client-secret
-    :type :string
-    :doc "GitHub application secret key"
+   {:key       :gh-client-secret
+    :type      :string
+    :doc       "GitHub application secret key"
     :required? true}
 
-   {:key :base-url
-    :type :string
-    :doc "Base URL of app, used to construct fully-qualified urls to the app (emails, etc)."
+   {:key       :base-url
+    :type      :string
+    :doc       "Base URL of app, used to construct fully-qualified urls to the app (emails, etc)."
     :required? true}
 
-   {:key :debug-exceptions
-    :type :bool
-    :doc "Render debug info to browser?"
+   {:key       :debug-exceptions
+    :type      :bool
+    :doc       "Render debug info to browser?"
     :required? true}
 
-   {:key :session-key
-    :type :string
-    :doc "String key used for encrypting the session (stored in cookie)"
+   {:key       :session-key
+    :type      :string
+    :doc       "String key used for encrypting the session (stored in cookie)"
     :required? true}
 
-   {:key :staging-banner
-    :type :bool
-    :doc "Show staging banner at top of pages?"
+   {:key       :staging-banner
+    :type      :bool
+    :doc       "Show staging banner at top of pages?"
     :required? true}
 
-   {:key :cljs-dev
-    :type :bool
-    :doc "Include dev cljs deps?"
+   {:key       :cljs-dev
+    :type      :bool
+    :doc       "Include dev cljs deps?"
     :required? false
-    :default false}
+    :default   false}
 
-   {:key :mongo-url
-    :type :string
-    :doc "'mongodb://'-style url"
+   {:key       :mongo-url
+    :type      :string
+    :doc       "'mongodb://'-style url"
     :required? true}
 
-   {:key :allow-robots
-    :type :bool
-    :doc "Allow crawl of the site?"
+   {:key       :allow-robots
+    :type      :bool
+    :doc       "Allow crawl of the site?"
     :required? true}
 
-   {:key :log-exceptions
-    :type :bool
-    :doc "Log exceptions to console?"
+   {:key       :log-exceptions
+    :type      :bool
+    :doc       "Log exceptions to console?"
     :required? false
-    :default false}
+    :default   false}
 
-   {:key :mailgun-api-key
-    :type :string
-    :doc "Mailgun API key"
+   {:key       :mailgun-api-key
+    :type      :string
+    :doc       "Mailgun API key"
     :required? true}
 
-   {:key :mailgun-api-endpoint
-    :type :string
-    :doc "Mailgun message endpoint (including domain to send from)."
+   {:key       :mailgun-api-endpoint
+    :type      :string
+    :doc       "Mailgun message endpoint (including domain to send from)."
     :required? true}
 
-   {:key :ga-tracking-id
-    :type :string
-    :doc "GA id (UA-...)"
+   {:key       :ga-tracking-id
+    :type      :string
+    :doc       "GA id (UA-...)"
     :required? false
-    :default "UA-17348828-3"}
+    :default   "UA-17348828-3"}
 
-   {:key :cache-markdown
-    :type :bool
-    :doc "Cache markdown from disk for duration of app process?"
+   {:key       :cache-markdown
+    :type      :bool
+    :doc       "Cache markdown from disk for duration of app process?"
     :required? false
-    :default false}
+    :default   false}
 
-   {:key :from-email
-    :type :string
-    :doc "Email address to put in 'from' field "
+   {:key     :from-email
+    :type    :string
+    :doc     "Email address to put in 'from' field "
     :default "ClojureDocs Development <dev@clojuredocs.org>"}
 
-   {:key :new-relic-app-name
-    :type :string
-    :doc "App name for display in new relic, ex `cd-dev`, `cd-staging`"
+   {:key       :new-relic-app-name
+    :type      :string
+    :doc       "App name for display in new relic, ex `cd-dev`, `cd-staging`"
     :required? false}
 
-   {:key :new-relic-license-key
-    :type :string
-    :doc "New Relic license key"
+   {:key       :new-relic-license-key
+    :type      :string
+    :doc       "New Relic license key"
     :required? false}
 
-   {:key :new-relic-browser-id
-    :type :string
-    :doc "New Relic Browser perf tracking id"
+   {:key       :new-relic-browser-id
+    :type      :string
+    :doc       "New Relic Browser perf tracking id"
     :required? false}
 
-   {:key :new-relic-browser-key
-    :type :string
-    :doc "New Relic Browser perf tracking key"
+   {:key       :new-relic-browser-key
+    :type      :string
+    :doc       "New Relic Browser perf tracking key"
     :required? false}])
 
 (defn get-env [lookup key]
@@ -126,7 +126,7 @@
        resolve-env
        (filter #(and (:required? %) (nil? (:value %))))))
 
-(def gh-creds {:client-id (get-env env-vars :gh-client-id)
+(def gh-creds {:client-id     (get-env env-vars :gh-client-id)
                :client-secret (get-env env-vars :gh-client-secret)})
 
 (def base-url (get-env env-vars :base-url))
@@ -154,8 +154,8 @@
 
 (def mailgun-config
   {:endpoint mailgun-api-endpoint
-   :api-key mailgun-api-key
-   :from from-email})
+   :api-key  mailgun-api-key
+   :from     from-email})
 
 (def new-relic-browser-key (get-env env-vars :new-relic-browser-key))
 

@@ -11,16 +11,16 @@
         {:syms (= == not= < > <= >=), :title "Compare"}
         {:syms
          (bit-and
-           bit-or
-           bit-xor
-           bit-flip
-           bit-not
-           bit-and-not
-           bit-clear
-           bit-set
-           bit-shift-left
-           bit-shift-right
-           bit-test),
+          bit-or
+          bit-xor
+          bit-flip
+          bit-not
+          bit-and-not
+          bit-clear
+          bit-set
+          bit-shift-left
+          bit-shift-right
+          bit-test),
          :title "Bitwise Operations"}
         {:syms
          (byte short int long float double bigint bigdec num rationalize),
@@ -67,7 +67,7 @@
          :title "Create"}
         {:syms (count get subs format), :title "Use"}
         {:syms (char
-                 char? string?), :title "Cast / Test"})}
+                char? string?), :title "Cast / Test"})}
       {:title "Regular Expressions",
        :groups
        ({:syms (re-pattern re-matcher), :title "Create"}
@@ -79,8 +79,8 @@
        ({:syms (not and or), :title "Boolean"}
         {:syms
          (let
-             if
-             if-not
+          if
+           if-not
            if-let
            if-some
            when
@@ -120,33 +120,33 @@
         {:syms (atom swap! reset! compare-and-set!), :title "Atoms"}
         {:syms
          (ref
-           sync
-           dosync
-           ref-set
-           alter
-           commute
-           ensure
-           io!
-           ref-history-count
-           ref-max-history
-           ref-min-history),
+          sync
+          dosync
+          ref-set
+          alter
+          commute
+          ensure
+          io!
+          ref-history-count
+          ref-max-history
+          ref-min-history),
          :title "Refs"}
         {:syms
          (agent
-           send
-           send-off
-           await
-           await-for
-           agent-error
-           restart-agent
-           shutdown-agents
-           *agent*
-           agent-errors
-           error-handler
-           set-error-handler!
-           error-mode
-           set-error-mode!
-           release-pending-sends),
+          send
+          send-off
+          await
+          await-for
+          agent-error
+          restart-agent
+          shutdown-agents
+          *agent*
+          agent-errors
+          error-handler
+          set-error-handler!
+          error-mode
+          set-error-mode!
+          release-pending-sends),
          :title "Agents"}
         {:syms
          (future
@@ -168,7 +168,7 @@
  Local Values"}
         {:syms
          (locking
-             pcalls
+          pcalls
            pvalues
            pmap
            seque
@@ -207,11 +207,11 @@
        ({:syms (defmulti defmethod), :title "Create"}
         {:syms
          (get-method
-           methods
-           prefer-method
-           prefers
-           remove-method
-           remove-all-methods),
+          methods
+          prefer-method
+          prefers
+          remove-method
+          remove-all-methods),
          :title "Inspect and Modify"})}
       {:title "Macros",
        :groups
@@ -222,34 +222,34 @@
        ({:syms (doto .. set!), :title "Objects"}
         {:syms
          (make-array
-           object-array
-           boolean-array
-           byte-array
-           char-array
-           short-array
-           int-array
-           long-array
-           float-array
-           double-array
-           aclone
-           to-array
-           to-array-2d
-           into-array),
+          object-array
+          boolean-array
+          byte-array
+          char-array
+          short-array
+          int-array
+          long-array
+          float-array
+          double-array
+          aclone
+          to-array
+          to-array-2d
+          into-array),
          :title "Array Creation"}
         {:syms
          (aget
-           aset
-           aset-boolean
-           aset-char
-           aset-byte
-           aset-int
-           aset-long
-           aset-short
-           aset-float
-           aset-double
-           alength
-           amap
-           areduce),
+          aset
+          aset-boolean
+          aset-char
+          aset-byte
+          aset-int
+          aset-long
+          aset-short
+          aset-float
+          aset-double
+          alength
+          amap
+          areduce),
          :title "Array Use"}
         {:syms (booleans bytes chars ints shorts longs floats doubles),
          :title "Casting"})}
@@ -267,7 +267,7 @@
          :title "Generic Operations"}
         {:syms
          (contains?
-           distinct? empty? every? not-every? some not-any?),
+          distinct? empty? every? not-every? some not-any?),
          :title "Content Tests"}
         {:syms (sequential? associative? sorted? counted? reversible? seqable?),
          :title "Capabilities"}
@@ -285,30 +285,30 @@
        :groups
        ({:syms
          (hash-map
-           array-map
-           zipmap
-           sorted-map
-           sorted-map-by
-           bean
-           frequencies),
+          array-map
+          zipmap
+          sorted-map
+          sorted-map-by
+          bean
+          frequencies),
          :title "Create"}
         {:syms
          (assoc
-             assoc-in
-           dissoc
-           find
-           key
-           val
-           keys
-           vals
-           get
-           get-in
-           update
-           update-in
-           select-keys
-           merge
-           merge-with
-           reduce-kv),
+          assoc-in
+          dissoc
+          find
+          key
+          val
+          keys
+          vals
+          get
+          get-in
+          update
+          update-in
+          select-keys
+          merge
+          merge-with
+          reduce-kv),
          :title "Use"}
         {:syms (rseq subseq rsubseq),
          :title "Use (Sorted Collections)"})}
@@ -325,74 +325,74 @@
        :groups
        ({:syms
          (seq
-           sequence
-           eduction
-           repeat
-           replicate
-           range
-           repeatedly
-           iterate
-           lazy-seq
-           lazy-cat
-           cycle
-           interleave
-           interpose
-           tree-seq
-           xml-seq
-           enumeration-seq
-           iterator-seq
-           file-seq
-           line-seq
-           resultset-seq),
+          sequence
+          eduction
+          repeat
+          replicate
+          range
+          repeatedly
+          iterate
+          lazy-seq
+          lazy-cat
+          cycle
+          interleave
+          interpose
+          tree-seq
+          xml-seq
+          enumeration-seq
+          iterator-seq
+          file-seq
+          line-seq
+          resultset-seq),
          :title "Create"}
         {:syms
          (first
-           second
-           last
-           rest
-           next
-           ffirst
-           nfirst
-           fnext
-           nnext
-           nth
-           nthnext
-           nthrest
-           rand-nth
-           butlast
-           take
-           take-last
-           take-nth
-           take-while
-           drop
-           drop-last
-           drop-while),
+          second
+          last
+          rest
+          next
+          ffirst
+          nfirst
+          fnext
+          nnext
+          nth
+          nthnext
+          nthrest
+          rand-nth
+          butlast
+          take
+          take-last
+          take-nth
+          take-while
+          drop
+          drop-last
+          drop-while),
          :title "Use (General)"}
         {:syms
          (conj
-           concat
-           distinct
-           group-by
-           partition
-           partition-all
-           partition-by
-           split-at
-           split-with
-           filter
-           filterv
-           remove
-           replace
-           shuffle
-           random-sample
-           flatten
-           sort
-           sort-by
-           reverse
-           dedupe),
+          concat
+          distinct
+          group-by
+          partition
+          partition-all
+          partition-by
+          split-at
+          split-with
+          filter
+          filterv
+          remove
+          replace
+          shuffle
+          random-sample
+          flatten
+          sort
+          sort-by
+          reverse
+          dedupe),
          :title "Use ('Modification')"}
         {:syms
          (for
-             doseq
+          doseq
            map
            mapv
            map-indexed
@@ -418,39 +418,39 @@
        ({:syms (def defonce intern declare), :title "Create"}
         {:syms
          (set!
-           alter-var-root
-           binding
-           with-bindings
-           with-bindings*
-           with-local-vars
-           letfn
-           gensym),
+          alter-var-root
+          binding
+          with-bindings
+          with-bindings*
+          with-local-vars
+          letfn
+          gensym),
          :title "Use"}
         {:syms
          (var
-           find-var
-           var-get
-           var?
-           bound?
-           resolve
-           ns-resolve
-           special-symbol?),
+          find-var
+          var-get
+          var?
+          bound?
+          resolve
+          ns-resolve
+          special-symbol?),
          :title "Inspect"})}
       {:title "Namespaces",
        :groups
        ({:syms (ns create-ns remove-ns), :title "Create & Delete"}
         {:syms
          (*ns*
-           ns-name
-           all-ns
-           the-ns
-           find-ns
-           ns-publics
-           ns-interns
-           ns-refers
-           ns-aliases
-           ns-imports
-           ns-map),
+          ns-name
+          all-ns
+          the-ns
+          find-ns
+          ns-publics
+          ns-interns
+          ns-refers
+          ns-aliases
+          ns-imports
+          ns-map),
          :title "Inspect"}
         {:syms (in-ns ns-resolve ns-unalias ns-unmap alias), :title "Use"}
         {:syms (namespace-munge), :title "Misc"})}
@@ -458,18 +458,18 @@
        :groups
        ({:syms
          (make-hierarchy
-           derive
-           underive
-           parents
-           ancestors
-           descendants
-           isa?),
+          derive
+          underive
+          parents
+          ancestors
+          descendants
+          isa?),
          :title "General"})}
       {:title "User Defined Types",
        :groups
        ({:syms
          (defprotocol
-             defrecord
+          defrecord
            deftype
            reify
            extend
@@ -491,58 +491,58 @@
        :groups
        ({:syms
          (*compile-files*
-           *compile-path*
-           *file*
-           *warn-on-reflection*
-           compile
-           load
-           load-file
-           load-reader
-           load-string
-           read
-           read-string
-           gen-class
-           gen-interface
-           loaded-libs
+          *compile-path*
+          *file*
+          *warn-on-reflection*
+          compile
+          load
+          load-file
+          load-reader
+          load-string
+          read
+          read-string
+          gen-class
+          gen-interface
+          loaded-libs
 
-           test),
+          test),
          :title "General"})}
       {:title "IO",
        :groups
        ({:syms
          (*in*
-           *out*
-           *err*
-           print
-           printf
-           println
-           pr
-           prn
-           print-str
-           println-str
-           pr-str
-           prn-str
-           newline
-           flush
-           read-line
-           slurp
-           spit
-           with-in-str
-           with-out-str
-           with-open),
+          *out*
+          *err*
+          print
+          printf
+          println
+          pr
+          prn
+          print-str
+          println-str
+          pr-str
+          prn-str
+          newline
+          flush
+          read-line
+          slurp
+          spit
+          with-in-str
+          with-out-str
+          with-open),
          :title "General"})}
       {:title "REPL",
        :groups
        ({:syms
          (*1
-           *2
-           *3
-           *e
-           *print-dup*
-           *print-length*
-           *print-level*
-           *print-meta*
-           *print-readably*),
+          *2
+          *3
+          *e
+          *print-dup*
+          *print-length*
+          *print-level*
+          *print-meta*
+          *print-readably*),
          :title "General"})}
       {:title "Misc",
        :groups

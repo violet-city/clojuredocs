@@ -1,0 +1,1 @@
+{:tasks {start-env (shell "docker compose up -d mongo")}}

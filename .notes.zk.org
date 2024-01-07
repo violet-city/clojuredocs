@@ -714,3 +714,12 @@ should be on the component.
 
 On the SA UI, why is there an add button? The add buttons should be on
 the AC results (can't add a SA to a var that doesn't exist). Yay!
+
+* <2023-05-09 Tue 21:43>
+
+Might as well pick up where he left off. Since datomic is now open source and
+supports most of Clojure's data types, I'm thinking of introducing
+it into the fold. Also, reitit looks like a nice alternative to compojure. I like
+that it's a little more data oriented.
+
+Finally, I'm thinking of implementing a library crawler TBD...

@@ -1,31 +1,26 @@
 (ns clojuredocs.entry
-  (:use [ring.middleware
-         file
-         file-info
-         session
-         params
-         nested-params
-         multipart-params
-         keyword-params]
-        [ring.middleware.session.cookie :only (cookie-store)]
-        [ring.util.response :only (response content-type)])
-  (:require [clojuredocs.config :as config]
-            [compojure.core :refer (defroutes GET POST PUT DELETE context)]
+  (:require [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [clojuredocs.config :as config]
+            [clojuredocs.pages.common :as common]
+            [clojuredocs.util :as util]
+            [compojure.core :as compojure :refer (GET context)]
             [compojure.response :refer (Renderable render)]
             [compojure.route :refer (not-found)]
-            [ring.util.response :refer (redirect)]
-            [clojure.string :as str]
             [hiccup.page :refer (html5)]
-            [clojuredocs.env :as env]
-            [clojuredocs.util :as util]
-            [clojuredocs.pages.common :as common]
-            [clojuredocs.pages :as pages]
-            [clojure.pprint :refer (pprint)]
-            [clojuredocs.api.server :as api.server]
+            [prone.middleware :as prone]
+            [ring.middleware.file :refer :all]
+            [ring.middleware.file-info :refer :all]
+            [ring.middleware.keyword-params :refer :all]
+            [ring.middleware.multipart-params :refer :all]
+            [ring.middleware.nested-params :refer :all]
+            [ring.middleware.params :refer :all]
+            [ring.middleware.session :refer :all]
+            [ring.middleware.session.cookie :refer [cookie-store]]
+            [ring.util.response :refer [response]]
             [somnium.congomongo :as mon]
-            [clojure.edn :as edn]
-            [clojuredocs.search :as search]
-            [prone.middleware :as prone]))
+            [taoensso.timbre :as log]
+            [datomic.api :as d]))
 
 (defn decode-body [content-length body]
   (when (and content-length
@@ -83,34 +78,23 @@
            :headers {"Location" (str "/" ns "/" (util/cd-encode name))}}))
       (catch Exception e nil))))
 
-(defroutes old-url-redirects
-  (GET "/clojure_core/:ns/:name" [ns name] (redirect-to-var ns name))
-  (GET "/clojure_core/:version/:ns/:name" [ns name] (redirect-to-var ns name))
-  (GET "/quickref/*" [] {:status 301 :headers {"Location" "/quickref"}})
-  (GET "/clojure_core" [] {:status 301 :headers {"Location" "/core-library"}})
-  (GET "/clojure_core/:ns" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
-  (GET "/v/:id" [id] (old-v-page-redirect id))
-  (GET "/examples_style_guide" [] {:status 301 :headers {"Location" "/examples-styleguide"}})
-  (GET "/Clojure%20Core/:ns" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
-  (GET "/Clojure%20Core/:ns/" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
-  (GET "/Clojure%20Core" [] {:status 301 :headers {"Location" "/core-library"}})
-  (GET "/clojure_core/:ns/" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
-  (GET "/clojure_core" [] {:status 301 :headers {"Location" "/core-library"}}))
 
-(defroutes _routes
-  (context "/api" [] api.server/routes)
-  (var pages/routes)
-  ;; Redirect old urls
-  (var old-url-redirects)
-  (not-found (fn [r] (common/four-oh-four r))))
+;; TODO: move to different namespace
+(defn urandom
+  [n]
+  (with-open [in (io/input-stream (io/file "/dev/urandom"))]
+    (let [buf (byte-array n)
+          _ (.read in buf)]
+      buf)))
 
 (def session-store
   (cookie-store
-    {:key config/session-key
-     :domain ".clojuredocs.org"}))
+   {:key    (urandom 16)
+    :domain ".clojuredocs.org"}))
 
 (defn promote-session-user [h]
   (fn [{:keys [session] :as r}]
+    (tap> session)
     (h (assoc r :user (:user session)))))
 
 (defn wrap-long-caching [h]
@@ -150,7 +134,7 @@
    :line-number (.getLineNumber s)
    :method-name (.getMethodName s)})
 
-(defn exception->log-entry [ e]
+(defn exception->log-entry [e]
   {:message (.getMessage e)
    :stacktrace (->> (.getStackTrace e)
                     (map stacktrace-el->clj))})
@@ -174,19 +158,43 @@
     (try
       (h r)
       (catch Exception e
+        (log/info e)
         (.printStackTrace e)
         {:status 500
          :headers {"Content-Type" "text/html"}
          :body (hiccup->html-string
-                 (common/five-hundred (:user r)))}))))
+                (common/five-hundred (:user r)))}))))
 
-(def routes
-  (-> _routes
+(defn wrap-datomic
+  [handler datomic]
+  (fn [req]
+    (handler (assoc req :datomic datomic :db (d/db datomic)))))
+
+(defn make-routes
+  [{:keys [api-routes page-routes datomic]}]
+  (-> (compojure/routes
+       (context "/api" [] api-routes)
+       page-routes
+       ;; Redirect old urls
+       (GET "/clojure_core/:ns/:name" [ns name] (redirect-to-var ns name))
+       (GET "/clojure_core/:version/:ns/:name" [ns name] (redirect-to-var ns name))
+       (GET "/quickref/*" [] {:status 301 :headers {"Location" "/quickref"}})
+       (GET "/clojure_core" [] {:status 301 :headers {"Location" "/core-library"}})
+       (GET "/clojure_core/:ns" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
+       (GET "/v/:id" [id] (old-v-page-redirect id))
+       (GET "/examples_style_guide" [] {:status 301 :headers {"Location" "/examples-styleguide"}})
+       (GET "/Clojure%20Core/:ns" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
+       (GET "/Clojure%20Core/:ns/" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
+       (GET "/Clojure%20Core" [] {:status 301 :headers {"Location" "/core-library"}})
+       (GET "/clojure_core/:ns/" [ns] {:status 301 :headers {"Location" (str "/" ns)}})
+       (GET "/clojure_core" [] {:status 301 :headers {"Location" "/core-library"}})
+       (not-found (fn [r] (common/four-oh-four r))))
       promote-session-user
       decode-edn-body
       wrap-keyword-params
       wrap-nested-params
       wrap-params
+      (wrap-datomic datomic)
       (wrap-session {:store session-store})
       (wrap-file "resources/public" {:allow-symlinks? true})
       (wrap-file-info {"woff" "application/font-woff"
@@ -196,7 +204,7 @@
                        "ttf" "application/x-font-ttf"})
       wrap-long-caching
       (enable-mw
-        wrap-exception-logging config/log-exceptions?)
+       wrap-exception-logging config/log-exceptions?)
       (enable-mw
-        prone/wrap-exceptions config/debug-exceptions?)
+       prone/wrap-exceptions config/debug-exceptions?)
       wrap-500-page))

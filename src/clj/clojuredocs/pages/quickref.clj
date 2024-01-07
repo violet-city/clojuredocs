@@ -24,16 +24,16 @@
      title]]
    [:dl.dl-horizontal
     (mapcat #(vector
-               [:div.dl-row
-                [:dt (util/$var-link "clojure.core" (str %) (str %))]
-                [:dd (->> (str "clojure.core/" %)
-                          search/lookup-vars
-                          :doc
-                          (take 110)
-                          (apply str))
-                 #_[:span.examples-count.pull-right
-                  "1 ex."]]])
-      syms)]])
+              [:div.dl-row
+               [:dt (util/$var-link "clojure.core" (str %) (str %))]
+               [:dd (->> (str "clojure.core/" %)
+                         search/lookup-vars
+                         :doc
+                         (take 110)
+                         (apply str))
+                #_[:span.examples-count.pull-right
+                   "1 ex."]]])
+            syms)]])
 
 (defn $category [{:keys [title groups]} parent-title]
   [:div.category
@@ -92,20 +92,20 @@
 
 (defn page-handler [{:keys [user uri]}]
   (common/$main
-    {:body-class "quickref-page"
-     :title "Clojure Quick Reference | ClojureDocs - Community-Powered Clojure Documentation and Examples"
-     :user user
-     :page-uri uri
-     :mobile-nav [(mobile-nav static/quickref-data)]
-     :content
-     [:div
-      [:div.row
-       [:div.col-sm-3.sidenav.toc-sidenav
-        [:div.page-toc
-         {:data-sticky-offset "10"}
-         ($toc static/quickref-data)]]
-       [:div.col-sm-9
-        [:h1 "Quickref for Clojure Core"]
-        [:p
-         "Adapted from Johannes Friestad's excellent quick ref."]
-        (map $sphere static/quickref-data)]]]}))
+   {:body-class "quickref-page"
+    :title "Clojure Quick Reference | ClojureDocs - Community-Powered Clojure Documentation and Examples"
+    :user user
+    :page-uri uri
+    :mobile-nav [(mobile-nav static/quickref-data)]
+    :content
+    [:div
+     [:div.row
+      [:div.col-sm-3.sidenav.toc-sidenav
+       [:div.page-toc
+        {:data-sticky-offset "10"}
+        ($toc static/quickref-data)]]
+      [:div.col-sm-9
+       [:h1 "Quickref for Clojure Core"]
+       [:p
+        "Adapted from Johannes Friestad's excellent quick ref."]
+       (map $sphere static/quickref-data)]]]}))

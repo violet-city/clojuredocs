@@ -48,8 +48,8 @@
        :margin-bottom "0.53%"
        :height 'auto}
       (nc/at-bp :xs
-        {:width "7.80%"
-         :height 'auto})]]
+                {:width "7.80%"
+                 :height 'auto})]]
     [:.migrate-account
      {:text-align 'right
       :font-size "12px"}]
@@ -373,17 +373,17 @@
      (nc/at-bp :sm {:width "380px"})]
     [:dt {:font-weight 'normal}]
     (nc/at-bp :xs
-      [:.dl-row {:padding 0}]
-      [:dt {:display 'block
-            :text-align 'left
-            :padding-top "10px"
-            :clear 'both}]
-      [:dd {:display 'block
-            :border-bottom "solid #ddd 1px"
-            :padding-bottom "10px"
-            :text-align 'left
-            :width "100%"
-            :margin-left 0}])]
+              [:.dl-row {:padding 0}]
+              [:dt {:display 'block
+                    :text-align 'left
+                    :padding-top "10px"
+                    :clear 'both}]
+              [:dd {:display 'block
+                    :border-bottom "solid #ddd 1px"
+                    :padding-bottom "10px"
+                    :text-align 'left
+                    :width "100%"
+                    :margin-left 0}])]
    [:.quickref-other
     {:display 'inline-block}
     [:li {:display 'inline-block}]]])
@@ -402,8 +402,7 @@
      {:margin-bottom "10px"}]
     [:.add-example-content
      {:padding "30px"
-      :background-color "#f8f8f8"}]
-    ]
+      :background-color "#f8f8f8"}]]
    [:p.example-instructions
     {:margin-bottom "10px"
      :font-size "12px"
@@ -503,8 +502,8 @@
          :margin-bottom "20px"}
     [:&:first-of-type {:margin-top 0}]]
    (at-media {:max-width "767px"}
-     [:h1 {:font-size "20px"
-           :line-height "30px"}])
+             [:h1 {:font-size "20px"
+                   :line-height "30px"}])
 
    [:h2 {:font-size "24px"
          :line-height "34px"
@@ -553,7 +552,7 @@
     [:.right {:text-align 'left}]
 
     (nc/at-bp :xs
-      [:.left :.right {:text-align 'center}])]
+              [:.left :.right {:text-align 'center}])]
 
    [:.avatar
     {:display 'inline-block
@@ -638,78 +637,76 @@
       :margin 0
       :padding 0}]]
    (nc/at-bp :xs
-     [:header.navbar
-      [:.btn.mobile-menu
-       {:display 'block
-        :margin-right "-11px"}]
-      [:.nav-search-widget {:display 'none}]
-      [:.navbar-nav {:display 'none}]]
-     [:.mobile-push-wrapper
-      (merge
-        {:right 0
-         :position 'relative
-         :padding-top "60px"
-         :transform "translate3d(0,0,0)"}
-        (nc/transition "all 0.2s ease"))]
-     [:.desktop-nav-bar :.desktop-side-nav {:display 'none}]
-     [:.mobile-nav-bar
-      (nc/transition "all 0.2s ease")
-      {:background-color 'white
-       :position 'fixed
-       :top 0
-       :width "100%"
-       :z-index 1000
-       :display 'block}
-      [:header {:margin-bottom 0}]]
-     [:.mobile-nav-menu
-      (nc/transition "all 0.2s ease")
-      {:transform "translate3d(200px,0,0)"}
-      {:display 'block
-       :position 'fixed
-       :width "200px"
-       :z-index 10000
-       :background-color "#47a3da"
-       :color 'white
-       :font-weight 300
-       :top 0
-       :bottom 0
-       :right 0
-       :margin 0
-       :overflow-y 'scroll}
-      [:h4 {:padding "5px 10px"
-            :border-bottom "solid rgba(255,255,255,0.3) 1px"
-            :margin 0
-            :color "rgba(255,255,255,0.8)"
-            :font-size "14px"
-            :letter-spacing "1px"
-            :font-weight 500}
-       [:i {:margin-right "5px"}]]
-      [:li {:margin 0}
-       [:a {:color 'white}
-        [:&:hover {:background-color "#258ecd"}]]]
-      [:.navbar-nav {:margin 0}]]
-     [:.mobile-push-wrapper.mobile-push
-      (nc/transition "all 0.2s ease")
-      {:transform "translate3d(-200px,0,0)"
-       :right 0}]
-     [:.mobile-nav-menu.mobile-push
-      (nc/transition "all 0.2s ease")
-      {:transform "translate3d(0,0,0)"}
-      [:header.navbar
-       (nc/transition "all 0.2s ease")
-       {:right "200px"}]]
-     [:.mobile-nav-bar.mobile-push
-      (nc/transition "all 0.2s ease")
-      {:transform "translate3d(-200px,0,0)"}]
-     [:.page-toc {:display 'none}]
-     [:body.search-active {:background-color 'transparent}]
-     [:.clojure-version {:font-weight 300
-                         :color "rgba(255,255,255,0.7)"
-                         :font-family monospace-font
-                         :margin-left "5px"
-                         :font-size "10px"}])
-
-
+             [:header.navbar
+              [:.btn.mobile-menu
+               {:display 'block
+                :margin-right "-11px"}]
+              [:.nav-search-widget {:display 'none}]
+              [:.navbar-nav {:display 'none}]]
+             [:.mobile-push-wrapper
+              (merge
+               {:right 0
+                :position 'relative
+                :padding-top "60px"
+                :transform "translate3d(0,0,0)"}
+               (nc/transition "all 0.2s ease"))]
+             [:.desktop-nav-bar :.desktop-side-nav {:display 'none}]
+             [:.mobile-nav-bar
+              (nc/transition "all 0.2s ease")
+              {:background-color 'white
+               :position 'fixed
+               :top 0
+               :width "100%"
+               :z-index 1000
+               :display 'block}
+              [:header {:margin-bottom 0}]]
+             [:.mobile-nav-menu
+              (nc/transition "all 0.2s ease")
+              {:transform "translate3d(200px,0,0)"}
+              {:display 'block
+               :position 'fixed
+               :width "200px"
+               :z-index 10000
+               :background-color "#47a3da"
+               :color 'white
+               :font-weight 300
+               :top 0
+               :bottom 0
+               :right 0
+               :margin 0
+               :overflow-y 'scroll}
+              [:h4 {:padding "5px 10px"
+                    :border-bottom "solid rgba(255,255,255,0.3) 1px"
+                    :margin 0
+                    :color "rgba(255,255,255,0.8)"
+                    :font-size "14px"
+                    :letter-spacing "1px"
+                    :font-weight 500}
+               [:i {:margin-right "5px"}]]
+              [:li {:margin 0}
+               [:a {:color 'white}
+                [:&:hover {:background-color "#258ecd"}]]]
+              [:.navbar-nav {:margin 0}]]
+             [:.mobile-push-wrapper.mobile-push
+              (nc/transition "all 0.2s ease")
+              {:transform "translate3d(-200px,0,0)"
+               :right 0}]
+             [:.mobile-nav-menu.mobile-push
+              (nc/transition "all 0.2s ease")
+              {:transform "translate3d(0,0,0)"}
+              [:header.navbar
+               (nc/transition "all 0.2s ease")
+               {:right "200px"}]]
+             [:.mobile-nav-bar.mobile-push
+              (nc/transition "all 0.2s ease")
+              {:transform "translate3d(-200px,0,0)"}]
+             [:.page-toc {:display 'none}]
+             [:body.search-active {:background-color 'transparent}]
+             [:.clojure-version {:font-weight 300
+                                 :color "rgba(255,255,255,0.7)"
+                                 :font-family monospace-font
+                                 :margin-left "5px"
+                                 :font-size "10px"}])
 
    [:.null-state {:background-color "#fafafa"
                   :text-align 'center
@@ -779,14 +776,14 @@
      :margin-bottom "30px"}
     [:li {:margin-bottom 0}]
     (nc/at-bp :xs
-      [:& {:margin-bottom "10px"}]
-      [:h3 {:display 'inline-block
-            :margin-right "20px"}]
-      [:ul {:display 'inline-block}]
-      [:li {:display 'inline-block
-            :margin-right "10px"
-            :background-color "#fafafa"
-            :padding "0 5px"}])]
+              [:& {:margin-bottom "10px"}]
+              [:h3 {:display 'inline-block
+                    :margin-right "20px"}]
+              [:ul {:display 'inline-block}]
+              [:li {:display 'inline-block
+                    :margin-right "10px"
+                    :background-color "#fafafa"
+                    :padding "0 5px"}])]
    [:.var-page-nav {:margin-bottom "20px"}]
    [:.ns-page
     [:h1 {:margin-bottom "20px"}]
@@ -812,14 +809,14 @@
      (nc/at-bp :md {:width "460px"})
      (nc/at-bp :sm {:width "400px"})]
     (nc/at-bp :xs
-      [:.dl-row {:padding 0}]
-      [:dt {:display 'block
-            :text-align 'left
-            :padding-top "10px"}]
-      [:dd {:display 'block
-            :border-bottom "solid #ddd 1px"
-            :width "100%"
-            :padding-bottom "10px"}])
+              [:.dl-row {:padding 0}]
+              [:dt {:display 'block
+                    :text-align 'left
+                    :padding-top "10px"}]
+              [:dd {:display 'block
+                    :border-bottom "solid #ddd 1px"
+                    :width "100%"
+                    :padding-bottom "10px"}])
     [:.no-doc {:color "#aaa"}]
     [:.ns-table
      {:width "100%"}
@@ -930,8 +927,7 @@
     {:border-top "solid #ccc 3px"
      :width "100%"}
     [:td {:border 'none
-          :padding "5px"
-          }]
+          :padding "5px"}]
     [:.aside {:font-size "12px"}]]
    [:.test-result
     {:padding "3px"
@@ -973,8 +969,7 @@
            :border-bottom 'none}
       ["& > li.active" {:border-bottom 'none}
        [:&:hover {:border-color "#eee"}]
-       ["& > a:focus" {:border-color "#eee"}]
-       ]]
+       ["& > a:focus" {:border-color "#eee"}]]]
      ["li.active > a" "li.active>a:hover" "li.active>a:focus"
       {:border-color "#eee"
        :border-bottom 'none}

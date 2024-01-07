@@ -22,3 +22,17 @@ resources/public/clojuredocs-export.json
 TAGS
 
 /dev-db
+
+/node_modules
+/.cpcache
+/.shadow-cljs
+
+/data
+
+/.idea
+/clojuredocs.iml
+/logs
+/.secrets
+
+/.clj-kondo
+/.lsp

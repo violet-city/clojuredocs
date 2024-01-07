@@ -55,8 +55,8 @@
           note (mon/fetch-one :notes :where {:_id _id})]
       (when-not note
         (throw+
-          {:status 404
-           :body {:message (str "Note with id " id " not found.")}}))
+         {:status 404
+          :body {:message (str "Note with id " id " not found.")}}))
       (c/validate! note [(is-author user)])
       (mon/destroy! :notes {:_id _id})
       {:status 200

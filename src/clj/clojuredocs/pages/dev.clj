@@ -1,10 +1,8 @@
 (ns clojuredocs.pages.dev
   (:require [clojure.string :as str]
-            [compojure.core :refer [defroutes GET]]
             [clojuredocs.pages.common :as common]
             [clojuredocs.pages.quickref :as quickref]
-            [schema.core :as s]
-            [clojuredocs.util :as util]))
+            [schema.core :as s]))
 
 (defn section [title & body]
   [:secton
@@ -32,24 +30,23 @@
 
 (defn $tpl [{:keys [body-class user page-uri nav content full-width?]}]
   (common/$main
-    {:body-class (or body-class "dev-page")
-     :user user
-     :page-uri page-uri
-     :full-width? full-width?
-     :content
-     [:div.row
-      [:div.col-sm-2
-       [:div.sidenav
-        [:section
-         [:h5 "Styleguide"]
-         [:ul
-          [:li [:a {:href "/dev/styleguide"} "General"]]
-          [:li [:a {:href "/dev/styleguide/search"} "Search"]]
-          [:li [:a {:href "/dev/styleguide/examples"} "Examples"]]
-          ]]
-        nav]]
-      [:div.col-sm-10
-       content]]}))
+   {:body-class (or body-class "dev-page")
+    :user user
+    :page-uri page-uri
+    :full-width? full-width?
+    :content
+    [:div.row
+     [:div.col-sm-2
+      [:div.sidenav
+       [:section
+        [:h5 "Styleguide"]
+        [:ul
+         [:li [:a {:href "/dev/styleguide"} "General"]]
+         [:li [:a {:href "/dev/styleguide/search"} "Search"]]
+         [:li [:a {:href "/dev/styleguide/examples"} "Examples"]]]]
+       nav]]
+     [:div.col-sm-10
+      content]]}))
 
 (defn example [{:keys [title hook caption]}]
   [:div.sg-example
@@ -118,165 +115,165 @@
 
 (def styleguide-sections
   (concat
-    [{:title "Bootstrap"
-      :nav-target "bootstrap-overrides"
-      :content
-      [[:p
-        "ClojureDocs is built on, among other things, the amazing "
-        [:a {:href "https://getbootstrap.com"} "Bootstrap framework"]
-        ". In this section, you'll find the ways we've overridden the Bootstrap defaults."]
-       [:section.headers-ex
-        [:h3 "Headers"]
-        [:h1 "h1. Heading 1 " [:small "With small"]]
-        [:h2 "h2. Heading 2 " [:small "With small"]]
-        [:h3 "h3. Heading 3 " [:small "With small"]]
-        [:h4 "h4. Heading 4 " [:small "With small"]]
-        [:h5 "h5. Heading 5 " [:small "With small"]]
-        [:h6 "h6. Heading 6 " [:small "With small"]]]
-       [:section.buttons-ex
-        [:h3 "Buttons"]
-        [:button.btn.btn-default "Default"]
-        [:button.btn.btn-primary "Primary"]
-        [:button.btn.btn-success "Success"]
-        [:button.btn.btn-info "Info"]
-        [:button.btn.btn-warning "Warning"]
-        [:button.btn.btn-danger "Danger"]]
-       [:section.contextual-bgs
-        [:h3 "Contextual Backgrounds"]
-        [:div.bg-primary "Primary"]
-        [:div.bg-success "Success"]
-        [:div.bg-info "Info"]
-        [:div.bg-warning "Warning"]
-        [:div.bg-danger "Danger"]]
-       [:section.forms-ex
-        [:h3 "Forms"]
-        [:form {:role "form"}
-         [:div.form-group
-          [:label {:for "email"} "Email"]
-          [:input.form-control {:type "email" :id "email" :placeholder "Enter email"}]]
-         [:div.form-group
-          [:label {:for "password"} "Password"]
-          [:input.form-control {:type "password" :id "password" :placeholder "Password"}]]
-         [:div.form-group
-          [:div.checkbox
-           [:label
-            [:input {:type "checkbox"}]
-            "Check me out"]]]
-         [:button.btn.btn-default {:type "submit"} "Submit"]]]]}
-     {:title "Common Elements"
-      :nav-target "common-elements"
-      :content
-      [[:p "Null-state, shown where there's nothing of something."
-        [:div.example.checker-bg
-         [:div.null-state
-          "We don't have any of those!"]]]
-       [:p "Namespace nav tree, nests namespaces to save on horizontal space. Namespaces are linked, non-namespace bridge parts (e.g. "
-        [:code "clojure"]
-        ", "
-        [:code "java"]
-        ") are unlinked."]
+   [{:title "Bootstrap"
+     :nav-target "bootstrap-overrides"
+     :content
+     [[:p
+       "ClojureDocs is built on, among other things, the amazing "
+       [:a {:href "https://getbootstrap.com"} "Bootstrap framework"]
+       ". In this section, you'll find the ways we've overridden the Bootstrap defaults."]
+      [:section.headers-ex
+       [:h3 "Headers"]
+       [:h1 "h1. Heading 1 " [:small "With small"]]
+       [:h2 "h2. Heading 2 " [:small "With small"]]
+       [:h3 "h3. Heading 3 " [:small "With small"]]
+       [:h4 "h4. Heading 4 " [:small "With small"]]
+       [:h5 "h5. Heading 5 " [:small "With small"]]
+       [:h6 "h6. Heading 6 " [:small "With small"]]]
+      [:section.buttons-ex
+       [:h3 "Buttons"]
+       [:button.btn.btn-default "Default"]
+       [:button.btn.btn-primary "Primary"]
+       [:button.btn.btn-success "Success"]
+       [:button.btn.btn-info "Info"]
+       [:button.btn.btn-warning "Warning"]
+       [:button.btn.btn-danger "Danger"]]
+      [:section.contextual-bgs
+       [:h3 "Contextual Backgrounds"]
+       [:div.bg-primary "Primary"]
+       [:div.bg-success "Success"]
+       [:div.bg-info "Info"]
+       [:div.bg-warning "Warning"]
+       [:div.bg-danger "Danger"]]
+      [:section.forms-ex
+       [:h3 "Forms"]
+       [:form {:role "form"}
+        [:div.form-group
+         [:label {:for "email"} "Email"]
+         [:input.form-control {:type "email" :id "email" :placeholder "Enter email"}]]
+        [:div.form-group
+         [:label {:for "password"} "Password"]
+         [:input.form-control {:type "password" :id "password" :placeholder "Password"}]]
+        [:div.form-group
+         [:div.checkbox
+          [:label
+           [:input {:type "checkbox"}]
+           "Check me out"]]]
+        [:button.btn.btn-default {:type "submit"} "Submit"]]]]}
+    {:title "Common Elements"
+     :nav-target "common-elements"
+     :content
+     [[:p "Null-state, shown where there's nothing of something."
        [:div.example.checker-bg
-        (common/$namespaces ["clojure.core"
-                             "clojure.java.shell"
-                             "clojure.test"
-                             "clojure.test.junit"
-                             "clojure.test.tap"
-                             "clojure.zip"])]
-       [:p "Tabbed Clojure Editor"]
-       (example {:hook :sg-tabbed-clojure-editor})
+        [:div.null-state
+         "We don't have any of those!"]]]
+      [:p "Namespace nav tree, nests namespaces to save on horizontal space. Namespaces are linked, non-namespace bridge parts (e.g. "
+       [:code "clojure"]
+       ", "
+       [:code "java"]
+       ") are unlinked."]
+      [:div.example.checker-bg
+       (common/$namespaces ["clojure.core"
+                            "clojure.java.shell"
+                            "clojure.test"
+                            "clojure.test.junit"
+                            "clojure.test.tap"
+                            "clojure.zip"])]
+      [:p "Tabbed Clojure Editor"]
+      (example {:hook :sg-tabbed-clojure-editor})
 
-       #_[:p "Tabbed Markdown Editor"]
-       #_(example {:hook :sg-tabbed-markdown-editor})]}
-     (let [sphere '{:title "Simple Values",
-                    :categories
-                    ({:title "Regular Expressions",
-                      :groups
-                      ({:syms (re-pattern re-matcher), :title "Create"}
-                       {:syms (re-find re-matches re-seq re-groups), :title "Use"})})}]
-       {:title "Quick Reference"
-        :nav-target "quickref"
-        :content
-        [[:div.example.checker-bg
-          (quickref/$toc [sphere])]
-         [:div.example.checker-bg
-          (quickref/$sphere sphere)]]})
-     {:title "See Alsos"
-      :nav-target "see-alsos"
-      :content
-      [[:p "Null state"]
-       [:div.example.checker-bg.sg-see-alsos-null-state]
-       [:p "Populated"]
-       [:div.example.checker-bg.sg-see-alsos-populated]
-       [:p "Add new"]
-       [:div.example.checker-bg.sg-add-see-also]
-       [:p "Loading"]
-       [:div.example.checker-bg.sg-add-see-also-loading]
-       [:p "Error"]
-       [:div.example.checker-bg.sg-add-see-also-error]
-       [:p "Autocomplete"]
-       [:div.example.checker-bg.sg-add-see-also-ac]]}
-     {:title "Notes"
-      :nav-target "notes"
-      :content
-      (->> [{:hook :sg-notes-null-state
-             :caption "null state"}
-            {:hook :sg-notes-populated
-             :caption "populated"}
-            {:hook :sg-add-note
-             :caption "add note"}
-            {:hook :sg-add-note-loading
-             :caption "add note loading"}]
-           (map example))}]))
+      #_[:p "Tabbed Markdown Editor"]
+      #_(example {:hook :sg-tabbed-markdown-editor})]}
+    (let [sphere '{:title "Simple Values",
+                   :categories
+                   ({:title "Regular Expressions",
+                     :groups
+                     ({:syms (re-pattern re-matcher), :title "Create"}
+                      {:syms (re-find re-matches re-seq re-groups), :title "Use"})})}]
+      {:title "Quick Reference"
+       :nav-target "quickref"
+       :content
+       [[:div.example.checker-bg
+         (quickref/$toc [sphere])]
+        [:div.example.checker-bg
+         (quickref/$sphere sphere)]]})
+    {:title "See Alsos"
+     :nav-target "see-alsos"
+     :content
+     [[:p "Null state"]
+      [:div.example.checker-bg.sg-see-alsos-null-state]
+      [:p "Populated"]
+      [:div.example.checker-bg.sg-see-alsos-populated]
+      [:p "Add new"]
+      [:div.example.checker-bg.sg-add-see-also]
+      [:p "Loading"]
+      [:div.example.checker-bg.sg-add-see-also-loading]
+      [:p "Error"]
+      [:div.example.checker-bg.sg-add-see-also-error]
+      [:p "Autocomplete"]
+      [:div.example.checker-bg.sg-add-see-also-ac]]}
+    {:title "Notes"
+     :nav-target "notes"
+     :content
+     (->> [{:hook :sg-notes-null-state
+            :caption "null state"}
+           {:hook :sg-notes-populated
+            :caption "populated"}
+           {:hook :sg-add-note
+            :caption "add note"}
+           {:hook :sg-add-note-loading
+            :caption "add note loading"}]
+          (map example))}]))
 
 (defn styleguide-handler [{:keys [user uri]}]
   ($tpl
-    {:user user
-     :page-uri uri
-     :nav ($nav "General" styleguide-sections)
-     :body-class :styleguide-page
-     :content
-     [:div
-      [:h1 "Styleguide"]
-      [:p.lead "Here you'll find various UI elements used on the ClojureDocs site. This styleguide is designed to help you see how changes will the vairous states of our UI elements when making changes."]
-      (map $section styleguide-sections)]}))
+   {:user user
+    :page-uri uri
+    :nav ($nav "General" styleguide-sections)
+    :body-class :styleguide-page
+    :content
+    [:div
+     [:h1 "Styleguide"]
+     [:p.lead "Here you'll find various UI elements used on the ClojureDocs site. This styleguide is designed to help you see how changes will the vairous states of our UI elements when making changes."]
+     (map $section styleguide-sections)]}))
 
 (defn search-styleguide-handler [{:keys [user uri]}]
   ($tpl
-    {:user user
-     :page-uri uri
-     :nav ($nav "Search" search-styleguide-sections)
-     :content
-     [:div
-      [:h1 "Search Stylguide"]
-      (map $section search-styleguide-sections)]}))
+   {:user user
+    :page-uri uri
+    :nav ($nav "Search" search-styleguide-sections)
+    :content
+    [:div
+     [:h1 "Search Stylguide"]
+     (map $section search-styleguide-sections)]}))
 
 (defn examples-styleguide-handler [{:keys [user uri]}]
   ($tpl
-    {:user user
-     :page-uri uri
-     :nav ($nav "Examples" examples-styleguide-sections)
-     :body-class :styleguide-page
-     :content
-     [:div
-      [:h1 "Examples Stylguide"]
-      (map $section examples-styleguide-sections)]}))
+   {:user user
+    :page-uri uri
+    :nav ($nav "Examples" examples-styleguide-sections)
+    :body-class :styleguide-page
+    :content
+    [:div
+     [:h1 "Examples Stylguide"]
+     (map $section examples-styleguide-sections)]}))
 
 (defn styleguide-inspector-handler [{:keys [user uri]}]
   (common/$main
-    {:user user
-     :page-uri uri
-     :body-class :styleguide-page
-     :full-width? true
-     :content
-     [:div.sg-examples-null-state-inspector]}))
+   {:user user
+    :page-uri uri
+    :body-class :styleguide-page
+    :full-width? true
+    :content
+    [:div.sg-examples-null-state-inspector]}))
 
 (defn perf-handler [{:keys [user uri]}]
   ($tpl
-    {:user user
-     :page-uri uri
-     :content
-     [:div
-      [:h1 "Search Performance"]]}))
+   {:user user
+    :page-uri uri
+    :content
+    [:div
+     [:h1 "Search Performance"]]}))
 
 (defn format-http-method [k]
   (-> k name str/upper-case))
@@ -335,13 +332,13 @@
 
 (defn api-docs-handler [{:keys [user uri]}]
   ($tpl
-    {:user user
-     :page-uri uri
-     :content
-     [:div
-      [:h1 "ClojureDocs API"]
-      [:div.markdown
-       (->> "src/md/api/overview.md"
-            common/memo-markdown-file)]
-      [:h2 "Endpoints"]
-      #_(docs-for schemas/get-examples-endpoint)]}))
+   {:user user
+    :page-uri uri
+    :content
+    [:div
+     [:h1 "ClojureDocs API"]
+     [:div.markdown
+      (->> "src/md/api/overview.md"
+           common/memo-markdown-file)]
+     [:h2 "Endpoints"]
+     #_(docs-for schemas/get-examples-endpoint)]}))

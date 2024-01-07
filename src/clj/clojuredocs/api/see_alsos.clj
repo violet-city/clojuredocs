@@ -39,16 +39,16 @@
         from-var (:from-var edn-body)
         to-var (search/lookup ns-name)
         new-see-also {:from-var (select-keys from-var
-                                  [:ns :name :library-url])
+                                             [:ns :name :library-url])
                       :to-var (select-keys to-var
-                                  [:ns :name :library-url])
+                                           [:ns :name :library-url])
                       :author user
                       :created-at (util/now)
                       :_id (org.bson.types.ObjectId.)}]
     (when-not to-var
       (throw+
-        {:status 404
-         :body {:message (str "Couldn't find var \"" ns-name "\". Don't forget to fully qualify the var name.")} }))
+       {:status 404
+        :body {:message (str "Couldn't find var \"" ns-name "\". Don't forget to fully qualify the var name.")}}))
     (c/validate! new-see-also [prevent-duplicates prevent-same])
     (c/validate-schema! new-see-also SeeAlso)
     (mon/insert! :see-alsos new-see-also)
@@ -66,8 +66,8 @@
           sa (mon/fetch-one :see-alsos :where {:_id _id})]
       (c/validate! sa [(is-author? user)])
       #_(mon/update! :see-alsos
-        {:_id _id}
-        (assoc sa :deleted-at (util/now)))
+                     {:_id _id}
+                     (assoc sa :deleted-at (util/now)))
       (mon/destroy! :see-alsos {:_id _id})
       {:status 200
        :body sa})))

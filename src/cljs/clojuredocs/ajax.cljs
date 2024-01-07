@@ -91,10 +91,10 @@
   (let [opts (merge ajax-defaults opts)
         opts (if-not (:headers opts)
                (assoc opts
-                 :headers (condp = (:data-type opts)
-                            :json {"Content-Type" "application/json;charset=utf-8"}
-                            :edn {"Content-Type" "application/edn;charset=utf-8"}
-                            {"Content-Type" "application/edn;charset=utf-8"}))
+                      :headers (condp = (:data-type opts)
+                                 :json {"Content-Type" "application/json;charset=utf-8"}
+                                 :edn {"Content-Type" "application/edn;charset=utf-8"}
+                                 {"Content-Type" "application/edn;charset=utf-8"}))
                opts)
         opts (cond
                (= :json (:data-type opts))
@@ -109,21 +109,21 @@
         {:keys [path method data headers success error data-type]} opts]
     (validate-ajax-args opts)
     (xhrio-send
-      path
-      (fn [e]
-        (try
-          (let [req (.-target e)
-                resp (-> req
-                         req->resp
-                         format-body)]
-            (if (:success resp)
-              (success resp)
-              (error resp)))
-          (catch js/Object e
-            (.error js/console (.-stack e))
-            (throw e))))
-      (-> method
-          name
-          safe-upper-case)
-      data
-      (clj->js headers))))
+     path
+     (fn [e]
+       (try
+         (let [req (.-target e)
+               resp (-> req
+                        req->resp
+                        format-body)]
+           (if (:success resp)
+             (success resp)
+             (error resp)))
+         (catch js/Object e
+           (.error js/console (.-stack e))
+           (throw e))))
+     (-> method
+         name
+         safe-upper-case)
+     data
+     (clj->js headers))))

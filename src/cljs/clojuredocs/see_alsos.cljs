@@ -23,8 +23,8 @@
     [:div.col-sm-6.see-also
      [:div.var-title
       (util/$var-link (:ns to-var) (:name to-var)
-        [:span.ns (:ns to-var) "/"]
-        [:span.name (:name to-var)])]
+                      [:span.ns (:ns to-var) "/"]
+                      [:span.name (:name to-var)])]
      [:p
       (->> doc
            (take 100)
@@ -65,10 +65,10 @@
 
 (defn $add-sa [{:keys [throttle debounce]} !app bus]
   (let [handle-ac-text (page/throttle-debounce
-                         (fn [text]
-                           (ops/send bus ::ac-text (or text "")))
-                         {:throttle throttle
-                          :debounce debounce})]
+                        (fn [text]
+                          (ops/send bus ::ac-text (or text "")))
+                        {:throttle throttle
+                         :debounce debounce})]
     (fn []
       (let [{:keys [expanded? loading? completing?
                     error ac-results ac-text] :as app} @!app]
@@ -126,8 +126,8 @@
         "No see-alsos for " [:code (:ns var) "/" (:name var)]]
        (->> see-alsos
             (map-indexed
-              (fn [i sa]
-                [$see-also {:key i} (rea/cursor !app [:see-alsos i]) bus]))
+             (fn [i sa]
+               [$see-also {:key i} (rea/cursor !app [:see-alsos i]) bus]))
             (partition-all 2)
             (map-indexed (fn [i cs] [:div.row
                                      {:key i}
